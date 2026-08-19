@@ -1,0 +1,31 @@
+{
+  "name": "dressnmore/aos-permissions",
+  "description": "DressnMore AOS — Permission & Policy Engine (Sprint 5)",
+  "type": "library",
+  "version": "0.5.0",
+  "license": "proprietary",
+  "require": {
+    "php": "^8.3",
+    "illuminate/support": ">=11.0",
+    "dressnmore/aos-core": "^0.1.0",
+    "dressnmore/aos-events": "^0.1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "DressnMore\\Aos\\Permissions\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DressnMore\\Aos\\Permissions\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "DressnMore\\Aos\\Permissions\\AosPermissionsServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable"
+}

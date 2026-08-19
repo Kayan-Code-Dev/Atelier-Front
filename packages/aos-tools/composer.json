@@ -1,0 +1,31 @@
+{
+  "name": "dressnmore/aos-tools",
+  "description": "DressnMore AOS — Business Tool Gateway (Sprint 4)",
+  "type": "library",
+  "version": "0.4.0",
+  "license": "proprietary",
+  "require": {
+    "php": "^8.3",
+    "illuminate/support": ">=11.0",
+    "dressnmore/aos-core": "^0.1.0",
+    "dressnmore/aos-events": "^0.1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "DressnMore\\Aos\\Tools\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DressnMore\\Aos\\Tools\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "DressnMore\\Aos\\Tools\\AosToolsServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable"
+}

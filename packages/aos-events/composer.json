@@ -1,0 +1,31 @@
+{
+  "name": "dressnmore/aos-events",
+  "description": "DressnMore AOS — event bus and domain/application/infrastructure event markers",
+  "type": "library",
+  "version": "0.1.0",
+  "license": "proprietary",
+  "require": {
+    "php": "^8.3",
+    "illuminate/support": ">=11.0",
+    "illuminate/events": ">=11.0",
+    "dressnmore/aos-core": "^0.1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "DressnMore\\Aos\\Events\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DressnMore\\Aos\\Events\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "DressnMore\\Aos\\Events\\AosEventsServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable"
+}

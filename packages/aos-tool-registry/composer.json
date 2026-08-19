@@ -1,0 +1,32 @@
+{
+  "name": "dressnmore/aos-tool-registry",
+  "description": "DressnMore AOS — AI Tool Registry & Capability Platform (Sprint 16)",
+  "type": "library",
+  "version": "0.16.0",
+  "license": "proprietary",
+  "require": {
+    "php": "^8.3",
+    "illuminate/support": ">=11.0",
+    "dressnmore/aos-core": "^0.1.0",
+    "dressnmore/aos-events": "^0.1.0",
+    "dressnmore/aos-tools": "^0.4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "DressnMore\\Aos\\ToolRegistry\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DressnMore\\Aos\\ToolRegistry\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "DressnMore\\Aos\\ToolRegistry\\AosToolRegistryServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable"
+}

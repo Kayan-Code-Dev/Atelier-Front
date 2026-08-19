@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+
+  --color-canvas: #f4f7f6;
+  --color-surface: #ffffff;
+  --color-surface-muted: #e9efed;
+  --color-border: #d5dedb;
+  --color-ink: #0f1c1a;
+  --color-ink-muted: #5a6b67;
+  --color-accent: #0f766e;
+  --color-accent-soft: #ccfbf1;
+  --color-accent-fg: #042f2e;
+  --color-danger: #b42318;
+  --color-warning: #b54708;
+  --color-success: #067647;
+  --color-info: #175cd3;
+
+  --shadow-panel: 0 1px 2px rgb(15 28 26 / 0.04), 0 8px 24px rgb(15 28 26 / 0.06);
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+}
+
+.dark {
+  --color-canvas: #071210;
+  --color-surface: #0d1b18;
+  --color-surface-muted: #132421;
+  --color-border: #1f3530;
+  --color-ink: #ecf4f1;
+  --color-ink-muted: #8aa39b;
+  --color-accent: #2dd4bf;
+  --color-accent-soft: #134e4a;
+  --color-accent-fg: #ccfbf1;
+  --color-danger: #f97066;
+  --color-warning: #fdb022;
+  --color-success: #32d583;
+  --color-info: #84caff;
+  --shadow-panel: 0 1px 2px rgb(0 0 0 / 0.35), 0 12px 32px rgb(0 0 0 / 0.35);
+}
+
+@layer base {
+  * {
+    @apply border-[color:var(--color-border)];
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, color-mix(in oklab, var(--color-accent) 18%, transparent), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, color-mix(in oklab, var(--color-info) 10%, transparent), transparent 55%),
+      var(--color-canvas);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-accent) 35%, transparent);
+  }
+}
+
+@layer utilities {
+  .panel {
+    background: color-mix(in oklab, var(--color-surface) 92%, transparent);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-panel);
+    backdrop-filter: blur(10px);
+  }
+
+  .text-muted {
+    color: var(--color-ink-muted);
+  }
+
+  .ring-focus {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-canvas)];
+  }
+}

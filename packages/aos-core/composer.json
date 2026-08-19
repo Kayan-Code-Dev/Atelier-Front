@@ -1,0 +1,30 @@
+{
+  "name": "dressnmore/aos-core",
+  "description": "DressnMore Agent Operating System — foundation kernel (Sprint 1 AOS Foundation)",
+  "type": "library",
+  "version": "0.1.0",
+  "license": "proprietary",
+  "require": {
+    "php": "^8.3",
+    "illuminate/support": ">=11.0",
+    "illuminate/contracts": ">=11.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "DressnMore\\Aos\\Core\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DressnMore\\Aos\\Core\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "DressnMore\\Aos\\Core\\AosCoreServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable"
+}
