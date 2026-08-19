@@ -1,0 +1,40 @@
+sequenceDiagram
+    participant User
+    participant ClothComponent
+    participant ReactQueryHook
+    participant APIService
+    participant BackendAPI
+    participant StateManager
+    participant UI
+
+    Note over User,UI: Scenario 1: Get unavailable days for a cloth
+    User->>ClothComponent: Select cloth or view details
+    ClothComponent->>ReactQueryHook: useQuery(unavailableDays, clothId)
+    ReactQueryHook->>APIService: getClothUnavailableDays(clothId)
+    APIService->>BackendAPI: GET /api/v1/clothes/{id}/unavailable-days
+    BackendAPI-->>APIService: { unavailable_ranges,<br/>unavailable_dates,<br/>available_from }
+    APIService-->>ReactQueryHook: Response data
+    ReactQueryHook->>StateManager: Update query cache
+    ReactQueryHook-->>ClothComponent: { data, isLoading, error }
+    ClothComponent->>UI: Display unavailable dates<br/>on calendar/date picker
+    UI-->>User: Show unavailable days highlighted
+
+    Note over User,UI: Scenario 2: Get available clothes for a date
+    User->>ClothComponent: Select delivery date<br/>& days of rent
+    ClothComponent->>StateManager: Update selectedDate,<br/>daysOfRent state
+    ClothComponent->>ReactQueryHook: useQuery(availableForDate,<br/>{ delivery_date, days_of_rent })
+    ReactQueryHook->>APIService: getClothesAvailableForDate(date, days)
+    APIService->>BackendAPI: GET /api/v1/clothes/available-for-date<br/>?delivery_date=2025-01-15&days_of_rent=3
+    BackendAPI-->>APIService: { available_clothes[],<br/>total_available }
+    APIService-->>ReactQueryHook: Response data
+    ReactQueryHook->>StateManager: Update query cache
+    ReactQueryHook-->>ClothComponent: { data, isLoading, error }
+    alt Loading state
+        ClothComponent->>UI: Show loading skeleton/spinner
+    else Success
+        ClothComponent->>UI: Render available clothes list<br/>with availability status
+        UI-->>User: Display available clothes
+    else Error
+        ClothComponent->>UI: Show error message/toast
+        UI-->>User: Display error notification
+    end

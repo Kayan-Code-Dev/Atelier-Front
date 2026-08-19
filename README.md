@@ -1,43 +1,62 @@
-# Atelier backend
+# Atelier frontend
 
-This tree is an isolated fork of the DressnMore Laravel backend for the **Atelier** local product.
-Original DressnMore lives in `Back-DressnMore-main` and is unchanged.
+Isolated fork of the DressnMore tenant UI for the **Atelier** local product.
+Original tenant app lives in `Front-DressnMore-main` and is unchanged.
 
-# Back-DressnMore
+Dev server: `http://127.0.0.1:5176`
+
+# React + TypeScript + Vite
 
 
-Clean Laravel backend for DressnMore SaaS with strict multi-tenant architecture.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Current foundation
+Currently, two official plugins are available:
 
-- Laravel 13 project baseline
-- Central and tenant database separation
-- Workspace-based tenant resolution
-- Tenant middleware pipeline:
-  - `IdentifyTenant`
-  - `CheckTenantSubscription`
-  - `SetTenantDatabase`
-- Separate platform and tenant auth controllers/services
-- `tenant:health` command
-- Initial central and tenant migrations
-- Central and tenant seeders for bootstrap defaults
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## API structure
+## Expanding the ESLint configuration
 
-- `routes/api/platform.php`
-  - `/api/platform/health`
-  - `/api/platform/login`
-  - `/api/platform/logout`
-  - `/api/platform/me`
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-- `routes/api/tenant.php`
-  - `/api/tenant/health`
-  - `/api/tenant/login`
-  - `/api/tenant/logout`
-  - `/api/tenant/me`
+```js
+export default tseslint.config({
+  extends: [
+    // Remove ...tseslint.configs.recommended and replace with this
+    ...tseslint.configs.recommendedTypeChecked,
+    // Alternatively, use this for stricter rules
+    ...tseslint.configs.strictTypeChecked,
+    // Optionally, add this for stylistic rules
+    ...tseslint.configs.stylisticTypeChecked,
+  ],
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-## Documentation
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-- `docs/architecture.md`
-- `docs/local-setup.md`
-- `docs/tenant-flow.md`
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default tseslint.config({
+  plugins: {
+    // Add the react-x and react-dom plugins
+    'react-x': reactX,
+    'react-dom': reactDom,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended typescript rules
+    ...reactX.configs['recommended-typescript'].rules,
+    ...reactDom.configs.recommended.rules,
+  },
+})
+```

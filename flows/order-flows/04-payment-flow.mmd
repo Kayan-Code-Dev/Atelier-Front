@@ -1,0 +1,121 @@
+sequenceDiagram
+    participant User
+    participant PaymentComponent
+    participant PaymentForm
+    participant FormValidation
+    participant ReactQueryHook
+    participant APIService
+    participant BackendAPI
+    participant StateManager
+    participant UI
+
+    Note over User,UI: Scenario 1: Add Payment
+    User->>PaymentComponent: Click "Add Payment" button<br/>on order details page
+    PaymentComponent->>PaymentForm: Open add payment modal
+    PaymentForm->>StateManager: Load current order data<br/>(total_price, paid, remaining)
+    StateManager-->>PaymentForm: Display order summary
+    
+    User->>PaymentForm: Enter amount, select payment_type
+    User->>PaymentForm: Click "Add Payment"
+    
+    PaymentForm->>FormValidation: Validate amount > 0<br/>Validate amount <= remaining
+    alt Validation fails
+        FormValidation-->>PaymentForm: Show field errors
+        PaymentForm->>UI: Display validation errors
+        UI-->>User: Error messages
+    else Validation passes
+        PaymentForm->>ReactQueryHook: useMutation(addPayment)
+        
+        Note over ReactQueryHook,StateManager: Optimistic Update
+        ReactQueryHook->>StateManager: Optimistically update cache
+        StateManager->>UI: Show loading spinner
+        
+        ReactQueryHook->>APIService: addPayment(orderId, {amount, payment_type})
+        APIService->>BackendAPI: POST /api/v1/orders/{id}/add-payment<br/>{amount, status, payment_type}
+        BackendAPI->>BackendAPI: Create payment record<br/>Recalculate order payments<br/>Update paid, remaining, status
+        BackendAPI-->>APIService: Payment and updated order
+        APIService-->>ReactQueryHook: Response data
+        
+        alt Success
+            ReactQueryHook->>StateManager: Update query cache<br/>with new payment and order
+            ReactQueryHook->>StateManager: Invalidate order queries
+            StateManager->>UI: Update payment list<br/>Update order totals
+            ReactQueryHook->>UI: Show success toast
+            UI-->>User: Success notification<br/>Payment added to list
+            PaymentForm->>PaymentForm: Close modal/reset form
+        else Error
+            ReactQueryHook->>StateManager: Revert optimistic update
+            ReactQueryHook->>UI: Show error toast
+            UI-->>User: Error notification
+        end
+    end
+
+    Note over User,UI: Scenario 2: Mark Payment as Paid
+    User->>PaymentComponent: Click "Mark as Paid"<br/>on payment item
+    PaymentComponent->>FormValidation: Check payment status<br/>(must not be paid/canceled)
+    alt Invalid status
+        FormValidation-->>PaymentComponent: Show error
+        PaymentComponent->>UI: Display error message
+        UI-->>User: Cannot mark as paid
+    else Valid status
+        PaymentComponent->>ReactQueryHook: useMutation(markPaymentAsPaid)
+        
+        ReactQueryHook->>StateManager: Optimistically update<br/>payment status to 'paid'
+        StateManager->>UI: Show loading state
+        
+        ReactQueryHook->>APIService: markPaymentAsPaid(orderId, paymentId)
+        APIService->>BackendAPI: POST /api/v1/orders/{orderId}/payments/{paymentId}/pay
+        BackendAPI->>BackendAPI: Validate status != paid/canceled<br/>Update status = 'paid'<br/>Recalculate order payments
+        BackendAPI-->>APIService: Updated payment and order
+        APIService-->>ReactQueryHook: Response data
+        
+        alt Success
+            ReactQueryHook->>StateManager: Update cache with<br/>new payment status and order totals
+            ReactQueryHook->>StateManager: Invalidate order queries
+            StateManager->>UI: Update payment status badge<br/>Update order paid/remaining amounts
+            ReactQueryHook->>UI: Show success toast
+            UI-->>User: Payment marked as paid
+        else Error
+            ReactQueryHook->>StateManager: Revert optimistic update
+            ReactQueryHook->>UI: Show error toast
+            UI-->>User: Error notification
+        end
+    end
+
+    Note over User,UI: Scenario 3: Cancel Payment
+    User->>PaymentComponent: Click "Cancel Payment"<br/>on payment item
+    PaymentComponent->>UI: Show confirmation dialog
+    UI-->>User: Confirm cancellation?
+    
+    alt User cancels
+        UI-->>PaymentComponent: Close dialog
+    else User confirms
+        PaymentComponent->>FormValidation: Check payment status<br/>(must not be canceled)
+        alt Already canceled
+            FormValidation-->>PaymentComponent: Show error
+            PaymentComponent->>UI: Display error message
+        else Valid status
+            PaymentComponent->>ReactQueryHook: useMutation(cancelPayment)
+            
+            ReactQueryHook->>StateManager: Optimistically update<br/>payment status to 'canceled'
+            StateManager->>UI: Show loading state
+            
+            ReactQueryHook->>APIService: cancelPayment(orderId, paymentId)
+            APIService->>BackendAPI: POST /api/v1/orders/{orderId}/payments/{paymentId}/cancel
+            BackendAPI->>BackendAPI: Validate status != canceled<br/>Update status = 'canceled'<br/>Recalculate order payments
+            BackendAPI-->>APIService: Updated payment and order
+            APIService-->>ReactQueryHook: Response data
+            
+            alt Success
+                ReactQueryHook->>StateManager: Update cache with<br/>canceled payment and order totals
+                ReactQueryHook->>StateManager: Invalidate order queries
+                StateManager->>UI: Update payment status badge<br/>Update order paid/remaining amounts
+                ReactQueryHook->>UI: Show success toast
+                UI-->>User: Payment canceled
+            else Error
+                ReactQueryHook->>StateManager: Revert optimistic update
+                ReactQueryHook->>UI: Show error toast
+                UI-->>User: Error notification
+            end
+        end
+    end

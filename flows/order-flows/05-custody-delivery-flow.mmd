@@ -1,0 +1,155 @@
+sequenceDiagram
+    participant User
+    participant CustodyComponent
+    participant CustodyForm
+    participant FileUpload
+    participant FormValidation
+    participant ReactQueryHook
+    participant APIService
+    participant BackendAPI
+    participant StateManager
+    participant UI
+
+    Note over User,UI: Scenario 1: Add Custody
+    User->>CustodyComponent: Click "Add Custody" button<br/>on order details page
+    CustodyComponent->>CustodyForm: Open add custody modal
+    CustodyForm->>StateManager: Load current order data<br/>(status, existing custodies)
+    StateManager-->>CustodyForm: Display order info
+    
+    User->>CustodyForm: Select type (money/physical item)
+    User->>CustodyForm: Enter description, value
+    alt Physical item
+        User->>FileUpload: Upload photos<br/>(one or multiple)
+        FileUpload->>CustodyForm: Store File[] in form state
+        FileUpload->>UI: Display photo previews
+    end
+    User->>CustodyForm: Enter notes (optional)
+    User->>CustodyForm: Click "Add Custody"
+    
+    CustodyForm->>FormValidation: Validate form data<br/>(type, description, value required)
+    alt Physical item
+        FormValidation->>FormValidation: Validate photos uploaded
+    end
+    alt Validation fails
+        FormValidation-->>CustodyForm: Show field errors
+        CustodyForm->>UI: Display validation errors
+        UI-->>User: Error messages
+    else Validation passes
+        CustodyForm->>ReactQueryHook: useMutation(addCustody)
+        
+        Note over ReactQueryHook,StateManager: Optimistic Update
+        ReactQueryHook->>StateManager: Optimistically update cache
+        StateManager->>UI: Show loading spinner
+        
+        ReactQueryHook->>APIService: addCustody(orderId, formData)
+        APIService->>APIService: Prepare FormData<br/>(include photos if physical item)
+        APIService->>BackendAPI: POST /api/v1/orders/{id}/custody<br/>{type, description, value, photos}
+        BackendAPI->>BackendAPI: Validate order status<br/>(created, partially_paid, paid)<br/>Create custody record<br/>Upload photos if physical item
+        BackendAPI-->>APIService: Created custody
+        APIService-->>ReactQueryHook: Response data
+        
+        alt Success
+            ReactQueryHook->>StateManager: Update query cache<br/>with new custody
+            ReactQueryHook->>StateManager: Invalidate order queries
+            StateManager->>UI: Update custody list<br/>Display new custody item
+            ReactQueryHook->>UI: Show success toast
+            UI-->>User: Success notification<br/>Custody added to list
+            CustodyForm->>CustodyForm: Close modal/reset form
+        else Error
+            ReactQueryHook->>StateManager: Revert optimistic update
+            ReactQueryHook->>UI: Show error toast
+            UI-->>User: Error notification
+        end
+    end
+
+    Note over User,UI: Scenario 2: Deliver Order
+    User->>CustodyComponent: Click "Deliver Order" button
+    CustodyComponent->>StateManager: Load order with custodies
+    StateManager-->>CustodyComponent: Check custody status
+    
+    CustodyComponent->>FormValidation: Validate:<br/>- Has at least one custody<br/>- All custodies are pending
+    alt Validation fails
+        FormValidation-->>CustodyComponent: Show error
+        CustodyComponent->>UI: Display error message<br/>(e.g., "All custodies must be pending")
+        UI-->>User: Cannot deliver order
+    else Validation passes
+        CustodyComponent->>UI: Show confirmation dialog
+        UI-->>User: Confirm delivery?
+        
+        alt User cancels
+            UI-->>CustodyComponent: Close dialog
+        else User confirms
+            CustodyComponent->>ReactQueryHook: useMutation(deliverOrder)
+            
+            ReactQueryHook->>StateManager: Optimistically update<br/>order status to 'delivered'
+            StateManager->>UI: Show loading state
+            
+            ReactQueryHook->>APIService: deliverOrder(orderId)
+            APIService->>BackendAPI: POST /api/v1/orders/{id}/deliver
+            BackendAPI->>BackendAPI: Validate has custody<br/>and all pending<br/>Update order status<br/>Create rent records for rent items<br/>Update item statuses
+            BackendAPI-->>APIService: Updated order
+            APIService-->>ReactQueryHook: Response data
+            
+            alt Success
+                ReactQueryHook->>StateManager: Update cache with<br/>delivered order and item statuses
+                ReactQueryHook->>StateManager: Invalidate order queries
+                StateManager->>UI: Update order status badge<br/>Update item statuses<br/>Show delivered state
+                ReactQueryHook->>UI: Show success toast
+                UI-->>User: Order delivered successfully
+            else Error
+                ReactQueryHook->>StateManager: Revert optimistic update
+                ReactQueryHook->>UI: Show error toast
+                UI-->>User: Error notification
+            end
+        end
+    end
+
+    Note over User,UI: Scenario 3: Update Custody Status
+    User->>CustodyComponent: Click "Update Status"<br/>on custody item
+    CustodyComponent->>CustodyForm: Open update custody modal
+    CustodyForm->>StateManager: Load current custody data
+    StateManager-->>CustodyForm: Display custody info
+    
+    User->>CustodyForm: Select status (returned/forfeited)
+    alt Status = 'returned'
+        User->>FileUpload: Upload return proof photo<br/>(required)
+        FileUpload->>CustodyForm: Store File in form state
+        FileUpload->>UI: Display photo preview
+    end
+    User->>CustodyForm: Enter notes (optional)
+    User->>CustodyForm: Click "Update Status"
+    
+    CustodyForm->>FormValidation: Validate form data
+    alt Status = 'returned'
+        FormValidation->>FormValidation: Validate return_proof_photo uploaded
+    end
+    alt Validation fails
+        FormValidation-->>CustodyForm: Show field errors
+        CustodyForm->>UI: Display validation errors
+        UI-->>User: Error messages
+    else Validation passes
+        CustodyForm->>ReactQueryHook: useMutation(updateCustody)
+        
+        ReactQueryHook->>StateManager: Optimistically update<br/>custody status
+        StateManager->>UI: Show loading spinner
+        
+        ReactQueryHook->>APIService: updateCustody(custodyId, formData)
+        APIService->>APIService: Prepare FormData<br/>(include return_proof_photo if returned)
+        APIService->>BackendAPI: PUT /api/v1/custody/{id}<br/>{status, return_proof_photo, notes}
+        BackendAPI->>BackendAPI: Validate return_proof_photo<br/>if status = 'returned'<br/>Update custody status<br/>Create custody return record if returned
+        BackendAPI-->>APIService: Updated custody
+        APIService-->>ReactQueryHook: Response data
+        
+        alt Success
+            ReactQueryHook->>StateManager: Update cache with<br/>updated custody
+            ReactQueryHook->>StateManager: Invalidate order queries
+            StateManager->>UI: Update custody status badge<br/>Show return proof if returned
+            ReactQueryHook->>UI: Show success toast
+            UI-->>User: Custody status updated
+            CustodyForm->>CustodyForm: Close modal/reset form
+        else Error
+            ReactQueryHook->>StateManager: Revert optimistic update
+            ReactQueryHook->>UI: Show error toast
+            UI-->>User: Error notification
+        end
+    end

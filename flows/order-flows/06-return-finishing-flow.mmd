@@ -1,0 +1,120 @@
+sequenceDiagram
+    participant User
+    participant ReturnComponent
+    participant ReturnForm
+    participant FileUpload
+    participant FormValidation
+    participant ReactQueryHook
+    participant APIService
+    participant BackendAPI
+    participant StateManager
+    participant UI
+
+    Note over User,UI: Scenario 1: Return Items
+    User->>ReturnComponent: Click "Return Items" button<br/>on order details page
+    ReturnComponent->>ReturnForm: Open return items modal
+    ReturnForm->>StateManager: Load current order data<br/>(items, status, rent items)
+    StateManager-->>ReturnForm: Display order items list
+    
+    loop For each rent item
+        User->>ReturnForm: Select item to return
+        User->>ReturnForm: Select status<br/>(ready_for_rent, repairing, etc.)
+        User->>FileUpload: Upload photos<br/>(condition photos)
+        FileUpload->>ReturnForm: Store File[] in form state
+        FileUpload->>UI: Display photo previews
+        User->>ReturnForm: Enter notes (optional)
+    end
+    
+    User->>ReturnForm: Click "Return Items"
+    
+    ReturnForm->>FormValidation: Validate form data<br/>(at least one item,<br/>status required, photos)
+    alt Validation fails
+        FormValidation-->>ReturnForm: Show field errors
+        ReturnForm->>UI: Display validation errors
+        UI-->>User: Error messages
+    else Validation passes
+        ReturnForm->>ReactQueryHook: useMutation(returnOrderItems)
+        
+        Note over ReactQueryHook,StateManager: Optimistic Update
+        ReactQueryHook->>StateManager: Optimistically update cache
+        StateManager->>UI: Show loading spinner
+        
+        ReturnForm->>APIService: Prepare FormData<br/>(items array with photos)
+        ReactQueryHook->>APIService: returnOrderItems(orderId, formData)
+        APIService->>BackendAPI: POST /api/v1/orders/{id}/return<br/>{items: [{cloth_id, status, photos, notes}]}
+        
+        BackendAPI->>BackendAPI: Validate items belong to order<br/>Validate items are rent type<br/>Update cloth status<br/>Update rent status = 'completed'<br/>Check if order can be finished
+        alt Order can be finished
+            BackendAPI->>BackendAPI: Update order status = 'finished'<br/>Log status change
+        end
+        BackendAPI-->>APIService: Order and returned_items
+        APIService-->>ReactQueryHook: Response data
+        
+        alt Success
+            ReactQueryHook->>StateManager: Update query cache<br/>with returned items and order
+            ReactQueryHook->>StateManager: Invalidate order queries
+            StateManager->>UI: Update item statuses<br/>Update order status if finished<br/>Show returned items
+            ReactQueryHook->>UI: Show success toast
+            UI-->>User: Success notification<br/>Items returned successfully
+            alt Order auto-finished
+                UI-->>User: Order automatically finished
+            end
+            ReturnForm->>ReturnForm: Close modal/reset form
+        else Error
+            ReactQueryHook->>StateManager: Revert optimistic update
+            ReactQueryHook->>UI: Show error toast
+            UI-->>User: Error notification
+        end
+    end
+
+    Note over User,UI: Scenario 2: Finish Order
+    User->>ReturnComponent: Click "Finish Order" button
+    ReturnComponent->>StateManager: Load order with<br/>custodies and payments
+    StateManager-->>ReturnComponent: Check order state
+    
+    ReturnComponent->>FormValidation: Validate before finish:<br/>- All custody has decisions<br/>- Returned custody has proof<br/>- No pending payments<br/>- Non-fee payments = total_price
+    alt Validation fails
+        FormValidation-->>ReturnComponent: Show validation errors
+        ReturnComponent->>UI: Display error messages<br/>(specific validation failures)
+        UI-->>User: Cannot finish order<br/>(show what's missing)
+    else Validation passes
+        ReturnComponent->>UI: Show confirmation dialog
+        UI-->>User: Confirm finish order?
+        
+        alt User cancels
+            UI-->>ReturnComponent: Close dialog
+        else User confirms
+            ReturnComponent->>ReactQueryHook: useMutation(finishOrder)
+            
+            ReactQueryHook->>StateManager: Optimistically update<br/>order status to 'finished'
+            StateManager->>UI: Show loading state
+            
+            ReactQueryHook->>APIService: finishOrder(orderId)
+            APIService->>BackendAPI: POST /api/v1/orders/{id}/finish
+            BackendAPI->>BackendAPI: Validate status transition<br/>Validate all requirements<br/>(custody, payments, etc.)
+            
+            alt Validation fails
+                BackendAPI-->>APIService: 422 Validation Error
+                APIService-->>ReactQueryHook: Error with validation messages
+                ReactQueryHook->>StateManager: Revert optimistic update
+                ReactQueryHook->>UI: Show validation error toast<br/>with specific messages
+                UI-->>User: Validation errors displayed
+            else Validation passes
+                BackendAPI->>BackendAPI: Update order status = 'finished'<br/>Log status change<br/>Log finished
+                BackendAPI-->>APIService: Updated order
+                APIService-->>ReactQueryHook: Response data
+                
+                alt Success
+                    ReactQueryHook->>StateManager: Update cache with<br/>finished order
+                    ReactQueryHook->>StateManager: Invalidate order queries
+                    StateManager->>UI: Update order status badge<br/>Show finished state
+                    ReactQueryHook->>UI: Show success toast
+                    UI-->>User: Order finished successfully
+                else Error
+                    ReactQueryHook->>StateManager: Revert optimistic update
+                    ReactQueryHook->>UI: Show error toast
+                    UI-->>User: Error notification
+                end
+            end
+        end
+    end

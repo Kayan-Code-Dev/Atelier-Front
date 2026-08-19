@@ -1,0 +1,74 @@
+sequenceDiagram
+    participant User
+    participant OrderUpdateForm
+    participant FormValidation
+    participant ReactQueryHook
+    participant APIService
+    participant BackendAPI
+    participant StateManager
+    participant UI
+
+    Note over User,UI: Order Update Flow
+    User->>OrderUpdateForm: Open edit modal/form<br/>for order
+    OrderUpdateForm->>StateManager: Load current order data<br/>(items, discount, status)
+    StateManager-->>OrderUpdateForm: Populate form fields
+    
+    User->>OrderUpdateForm: Modify items (add/remove/update)
+    User->>OrderUpdateForm: Change discount_type/discount_value
+    User->>OrderUpdateForm: Change status (optional)
+    User->>OrderUpdateForm: Click "Save" button
+    
+    OrderUpdateForm->>FormValidation: Validate form data<br/>(items, discount, etc.)
+    alt Validation fails
+        FormValidation-->>OrderUpdateForm: Show field errors
+        OrderUpdateForm->>UI: Display validation errors
+        UI-->>User: Error messages
+    else Validation passes
+        OrderUpdateForm->>StateManager: Store old order data<br/>(for comparison)
+        OrderUpdateForm->>ReactQueryHook: useMutation(updateOrder)
+        
+        Note over ReactQueryHook,StateManager: Optimistic Update
+        ReactQueryHook->>StateManager: Optimistically update cache<br/>(show loading state)
+        StateManager->>UI: Show loading spinner
+        
+        ReactQueryHook->>APIService: updateOrder(orderId, updateData)
+        APIService->>BackendAPI: PUT /api/v1/orders/{id}<br/>{items, discount_type, status, etc.}
+        
+        alt Items changed
+            BackendAPI->>BackendAPI: Calculate new total_price<br/>Compare old vs new items
+            loop For removed items
+                BackendAPI->>BackendAPI: Log item removed<br/>Update cloth status
+            end
+            loop For new items
+                BackendAPI->>BackendAPI: Validate cloth availability<br/>Check rental availability
+                BackendAPI->>BackendAPI: Log item added
+            end
+            loop For updated items
+                BackendAPI->>BackendAPI: Log item updated
+            end
+        end
+        
+        alt Discount changed
+            BackendAPI->>BackendAPI: Recalculate total_price<br/>Log discount change
+        end
+        
+        alt Status changed
+            BackendAPI->>BackendAPI: Log status change<br/>Sync item statuses
+        end
+        
+        BackendAPI-->>APIService: Updated order response
+        APIService-->>ReactQueryHook: Response data
+        
+        alt Success
+            ReactQueryHook->>StateManager: Update query cache<br/>with new order data
+            ReactQueryHook->>StateManager: Invalidate related queries<br/>(orders list, order details)
+            StateManager->>UI: Update UI with new data
+            ReactQueryHook->>UI: Show success toast
+            UI-->>User: Success notification<br/>Updated order displayed
+            OrderUpdateForm->>OrderUpdateForm: Close modal/reset form
+        else Error
+            ReactQueryHook->>StateManager: Revert optimistic update
+            ReactQueryHook->>UI: Show error toast
+            UI-->>User: Error notification
+        end
+    end
