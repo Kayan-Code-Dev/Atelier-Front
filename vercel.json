@@ -1,6 +1,12 @@
 {
   "framework": "vite",
-  "installCommand": "npm install",
-  "buildCommand": "npm run build",
-  "outputDirectory": "public/build"
+  "installCommand": "npm install --prefix apps/ai-workspace",
+  "buildCommand": "npm run build --prefix apps/ai-workspace",
+  "outputDirectory": "apps/ai-workspace/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
