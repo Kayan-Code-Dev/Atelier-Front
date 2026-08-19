@@ -3,17 +3,6 @@ import { Outlet, useLocation } from "react-router";
 import ProjectSidebar from "./ProjectSidebar";
 import ProjectTopBar from "./ProjectTopBar";
 
-/** Keep conversation threads on the same page instance so the main pane does not go blank. */
-function outletAnimationKey(pathname: string): string {
-  if (
-    pathname === "/intelligence" ||
-    pathname.startsWith("/intelligence/conversations")
-  ) {
-    return "intelligence-chat";
-  }
-  return pathname;
-}
-
 export default function ProjectLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -40,12 +29,9 @@ export default function ProjectLayout() {
 
   return (
     <div
-      className={`min-h-screen${location.pathname === "/market" || location.pathname.startsWith("/market/") ? " market-mode" : ""}`}
+      className="min-h-screen"
       style={{
-        background:
-          location.pathname === "/market" || location.pathname.startsWith("/market/")
-            ? "#F5F3FF"
-            : "var(--color-bg)",
+        background: "var(--color-bg)",
         direction: "rtl",
       }}
     >
@@ -77,7 +63,7 @@ export default function ProjectLayout() {
             @media (max-width: 1023px) { main > div { padding: var(--page-padding-md) !important; } }
             @media (max-width: 640px)  { main > div { padding: var(--page-padding-sm) !important; } }
           `}</style>
-          <div key={outletAnimationKey(location.pathname)} className="page-enter">
+          <div key={location.pathname} className="page-enter">
             <Outlet />
           </div>
         </div>

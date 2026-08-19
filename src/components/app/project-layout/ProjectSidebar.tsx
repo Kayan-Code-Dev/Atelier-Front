@@ -1,6 +1,6 @@
 import { NavLink, useLocation, useNavigate } from "react-router";
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { sidebarLabels, marketSidebarLabels } from "@/components/app/sidebar/constants";
+import { sidebarLabels } from "@/components/app/sidebar/constants";
 import useSidebarLabel, { useSidebarPermissions } from "@/components/app/sidebar/useSidebarLabel";
 import { useQuery } from "@tanstack/react-query";
 import { useGetProfileQueryOptions } from "@/api/v2/account/account.hooks";
@@ -25,7 +25,7 @@ function navEntryIsActive(
   if (config.activeMatch) {
     return matchesSidebarMatch(loc, config.activeMatch);
   }
-  if (config.path === "/dashboard" || config.path === "/market") return loc.pathname === config.path;
+  if (config.path === "/dashboard") return loc.pathname === config.path;
   return loc.pathname === config.path || loc.pathname.startsWith(config.path + "/");
 }
 
@@ -76,10 +76,7 @@ export default function ProjectSidebar({
   const navigate = useNavigate();
   const navRef = useRef<HTMLElement>(null);
   const permissions = useSidebarPermissions();
-  const isMarket = location.pathname === "/market" || location.pathname.startsWith("/market/");
-  const erpNavItems = useSidebarLabel(sidebarLabels, permissions);
-  const marketNavItems = useSidebarLabel(marketSidebarLabels, permissions);
-  const navItems = isMarket ? marketNavItems : erpNavItems;
+  const navItems = useSidebarLabel(sidebarLabels, permissions);
   const [openGroups, setOpenGroups] = useState<string[]>([]);
   const { data: profile } = useQuery(useGetProfileQueryOptions());
   const loginData = useAuthStore((s) => s.loginData);
@@ -131,9 +128,7 @@ export default function ProjectSidebar({
   };
 
   const renderedSections = new Set<string>();
-  const sidebarBg = isMarket
-    ? "linear-gradient(160deg, #312E81 0%, #4338CA 42%, #4F46E5 100%)"
-    : "linear-gradient(160deg, #0369A1 0%, #0284C7 35%, #0EA5E9 100%)";
+  const sidebarBg = "linear-gradient(160deg, #0369A1 0%, #0284C7 35%, #0EA5E9 100%)";
   const activeItemStyle = {
     color: "#ffffff",
     background: "rgba(255,255,255,0.22)",
@@ -166,7 +161,6 @@ export default function ProjectSidebar({
           width: collapsed ? "70px" : "260px",
           background: sidebarBg,
           borderLeft: "1px solid rgba(255,255,255,0.05)",
-          fontFamily: isMarket ? '"Cairo", sans-serif' : undefined,
         }}
       >
         {/* ── Logo & Toggle ── */}
@@ -192,13 +186,13 @@ export default function ProjectSidebar({
           {!collapsed && (
             <div className="flex-1 min-w-0 fade-in overflow-hidden">
               <p className="text-white font-black text-[13px] leading-tight truncate">
-                {isMarket ? "Marketplace" : "DressnMore"}
+                Atelier
               </p>
               <p
                 className="text-[10px] truncate mt-0.5 font-semibold"
-                style={{ color: isMarket ? "#C4B5FD" : "#C2964A", letterSpacing: "0.04em" }}
+                style={{ color: "#C2964A", letterSpacing: "0.04em" }}
               >
-                {isMarket ? "لوحة الماركت" : "نظام إدارة الأتيليه"}
+                نظام إدارة الأتيليه
               </p>
             </div>
           )}
@@ -383,43 +377,6 @@ export default function ProjectSidebar({
             })}
           </ul>
         </nav>
-
-        {/* ── Switch board ── */}
-        <div className={`flex-shrink-0 ${collapsed ? "px-1.5" : "px-2.5"} pb-1.5`}>
-          <button
-            onClick={() => {
-              navigate(isMarket ? "/dashboard" : "/market", { preventScrollReset: true });
-              onMobileClose?.();
-            }}
-            className={`w-full flex items-center rounded-2xl cursor-pointer transition-all duration-200 ${
-              collapsed ? "justify-center p-2.5" : "gap-2.5 px-3 py-3"
-            }`}
-            style={{
-              background: isMarket
-                ? "linear-gradient(135deg, #0369A1 0%, #C2964A 100%)"
-                : "linear-gradient(135deg, #14B8A6 0%, #10B981 52%, #059669 100%)",
-              boxShadow: isMarket
-                ? "0 8px 18px rgba(194,150,74,0.28)"
-                : "0 8px 18px rgba(16,185,129,0.32)",
-              border: "0",
-            }}
-            title={isMarket ? "Switch to Atelier" : "Switch to Market"}
-          >
-            <i
-              className={`${isMarket ? "ri-scissors-cut-line" : "ri-store-3-line"} text-white ${collapsed ? "text-base" : "text-lg"}`}
-            />
-            {!collapsed && (
-              <div className="flex-1 min-w-0 text-center">
-                <p className="text-[12px] font-black text-white leading-tight">
-                  {isMarket ? "Switch to Atelier" : "Switch to Market"}
-                </p>
-                <p className="text-[10px] font-semibold text-white/90 mt-0.5">
-                  {isMarket ? "لوحة الإدارة" : "لوحة الماركت"}
-                </p>
-              </div>
-            )}
-          </button>
-        </div>
 
         {/* ── User footer ── */}
         <div

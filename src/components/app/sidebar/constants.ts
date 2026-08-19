@@ -29,10 +29,6 @@ import {
   KeyRound,
   Gift,
   CircleHelp,
-  Sparkles,
-  MessageCircle,
-  CalendarDays,
-  Globe,
 } from "lucide-react";
 
 const iconSize = 20;
@@ -64,99 +60,6 @@ export type SidebarLabel = {
   activeExclude?: SidebarActiveMatch;
 };
 
-export const marketSidebarLabels: SidebarLabel[] = [
-  {
-    icon: null,
-    label: "نظرة عامة",
-    path: "/market",
-    level: 1,
-    section: "Marketplace",
-    riIcon: "ri-dashboard-3-line",
-    iconComponent: createIcon(LayoutDashboard),
-    activeMatch: { pathname: "/market" },
-  },
-  {
-    icon: null,
-    label: "المنتجات",
-    path: "/market/products",
-    level: 1,
-    riIcon: "ri-price-tag-3-line",
-    iconComponent: createIcon(Package),
-  },
-  {
-    icon: null,
-    label: "الطلبات",
-    path: "/market/orders",
-    level: 1,
-    riIcon: "ri-shopping-bag-3-line",
-    iconComponent: createIcon(ShoppingCart),
-  },
-  {
-    icon: null,
-    label: "العملاء",
-    path: "/market/customers",
-    level: 1,
-    riIcon: "ri-user-star-line",
-    iconComponent: createIcon(Users),
-  },
-  {
-    icon: null,
-    label: "المبيعات",
-    path: "/market/sales",
-    level: 1,
-    riIcon: "ri-line-chart-line",
-    iconComponent: createIcon(FileBarChart),
-  },
-  {
-    icon: null,
-    label: "العروض والخصومات",
-    path: "/market/offers",
-    level: 1,
-    riIcon: "ri-percent-line",
-    iconComponent: createIcon(Gift),
-  },
-  {
-    icon: null,
-    label: "التقييمات",
-    path: "/market/reviews",
-    level: 1,
-    riIcon: "ri-star-line",
-    iconComponent: createIcon(Sparkles),
-  },
-  {
-    icon: null,
-    label: "الرسائل",
-    path: "/market/messages",
-    level: 1,
-    riIcon: "ri-chat-3-line",
-    iconComponent: createIcon(MessageCircle),
-  },
-  {
-    icon: null,
-    label: "حجوزات البروفة",
-    path: "/market/bookings",
-    level: 1,
-    riIcon: "ri-calendar-check-line",
-    iconComponent: createIcon(CalendarDays),
-  },
-  {
-    icon: null,
-    label: "الموقع",
-    path: "/market/website",
-    level: 1,
-    riIcon: "ri-map-pin-line",
-    iconComponent: createIcon(Globe),
-  },
-  {
-    icon: null,
-    label: "إعدادات المتجر",
-    path: "/market/settings",
-    level: 1,
-    riIcon: "ri-store-3-line",
-    iconComponent: createIcon(Settings),
-  },
-];
-
 export const sidebarLabels: SidebarLabel[] = [
   // 1. Dashboard
   {
@@ -169,46 +72,6 @@ export const sidebarLabels: SidebarLabel[] = [
     permissions: ["dashboard.view", "dashboard.activity.view", "dashboard.business.view", "dashboard.hr.view"],
     iconComponent: createIcon(LayoutDashboard),
   },
-  {
-    icon: null,
-    label: "المستشار الذكي",
-    path: "/intelligence",
-    level: 1,
-    section: "الرئيسية",
-    riIcon: "ri-sparkling-line",
-    permissions: ["intelligence.view", "intelligence.chat"],
-    iconComponent: createIcon(Sparkles),
-    subItems: [
-      {
-        icon: null,
-        label: "المحادثات",
-        path: "/intelligence/conversations",
-        level: 2,
-        riIcon: "ri-chat-3-line",
-        permissions: ["intelligence.view", "intelligence.chat"],
-        iconComponent: createIcon(Sparkles),
-      },
-      {
-        icon: null,
-        label: "التقارير",
-        path: "/intelligence/reports",
-        level: 2,
-        riIcon: "ri-bar-chart-2-line",
-        permissions: ["intelligence.view"],
-        iconComponent: createIcon(FileBarChart),
-      },
-      {
-        icon: null,
-        label: "التنبيهات",
-        path: "/intelligence/alerts",
-        level: 2,
-        riIcon: "ri-notification-3-line",
-        permissions: ["intelligence.view"],
-        iconComponent: createIcon(Bell),
-      },
-    ],
-  },
-  
   {
     icon: null,
     label: "إدارة الحسابات",

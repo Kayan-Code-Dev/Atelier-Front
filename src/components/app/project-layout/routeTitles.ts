@@ -3,7 +3,7 @@
  */
 import { matchesLocationSearch, SOLD_ORDERS_LIST_LOCATION } from "@/lib/matchLocationSearch";
 import { SOLD_PROCESS_TYPE } from "@/lib/salesOrderConstants";
-import { sidebarLabels, marketSidebarLabels } from "@/components/app/sidebar/constants";
+import { sidebarLabels } from "@/components/app/sidebar/constants";
 import type { SidebarLabel } from "@/components/app/sidebar/constants";
 
 export type RouteInfo = { title: string; icon: string; parent?: string };
@@ -31,7 +31,6 @@ function collectRoutes(
 
 export const routeTitles = {
   ...collectRoutes(sidebarLabels),
-  ...collectRoutes(marketSidebarLabels, "Marketplace"),
 };
 
 const soldOrdersListInfo: RouteInfo = routeTitles["/sales/invoices"] ?? {
@@ -56,28 +55,6 @@ export function getRouteInfo(pathname: string, search = ""): RouteInfo {
         parent: "قسم البيع",
       };
     }
-  }
-
-  if (pathname === "/market/products/new") {
-    return { title: "إضافة منتج", icon: "ri-add-line", parent: "Marketplace" };
-  }
-  if (/^\/market\/products\/[^/]+\/edit$/.test(pathname)) {
-    return { title: "تعديل المنتج", icon: "ri-pencil-line", parent: "Marketplace" };
-  }
-  if (/^\/market\/products\/[^/]+$/.test(pathname)) {
-    return { title: "تفاصيل المنتج", icon: "ri-price-tag-3-line", parent: "Marketplace" };
-  }
-  if (/^\/market\/orders\/[^/]+$/.test(pathname)) {
-    return { title: "تفاصيل الطلب", icon: "ri-shopping-bag-3-line", parent: "Marketplace" };
-  }
-  if (/^\/market\/customers\/[^/]+$/.test(pathname)) {
-    return { title: "ملف عميل السوق", icon: "ri-user-star-line", parent: "Marketplace" };
-  }
-  if (/^\/market\/messages\/[^/]+$/.test(pathname)) {
-    return { title: "محادثة", icon: "ri-chat-3-line", parent: "Marketplace" };
-  }
-  if (/^\/market\/bookings\/[^/]+$/.test(pathname)) {
-    return { title: "حجز بروفة", icon: "ri-calendar-check-line", parent: "Marketplace" };
   }
 
   if (routeTitles[pathname]) return routeTitles[pathname];
