@@ -11,10 +11,11 @@ export const cashboxesRoutes = () => {
       element={
         <PermissionProtectedRoute
           permission={[
-            "cashbox.view",
-            "cashbox.manage",
-            "cashbox.recalculate",
-            "transactions.view",
+            "cashboxes.view",
+            "cashboxes.create",
+            "cashboxes.update",
+            "cashboxes.recalculate",
+            "cash_movements.view",
           ]}
         />
       }

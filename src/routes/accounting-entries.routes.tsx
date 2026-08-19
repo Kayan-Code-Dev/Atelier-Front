@@ -8,7 +8,11 @@ export const accountingEntriesRoutes = () => {
       path="/treasury/entries"
       element={
         <PermissionProtectedRoute
-          permission={["transactions.view"]}
+          permission={[
+            "accounting.journal_entries.view",
+            "accounting.entries.view",
+            "accounting.view",
+          ]}
         />
       }
     >

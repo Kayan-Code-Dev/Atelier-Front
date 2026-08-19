@@ -110,7 +110,7 @@ export const sidebarLabels: SidebarLabel[] = [
     level: 1,
     section: "المالية",
     riIcon: "ri-safe-2-line",
-    permissions: ["cashbox.view", "cashbox.manage", "cashbox.recalculate", "transactions.view"],
+    permissions: ["cashboxes.view", "cashboxes.create", "cashboxes.update", "cashboxes.recalculate", "cash_movements.view"],
     iconComponent: createIcon(Banknote),
     subItems: [
       {
@@ -119,7 +119,7 @@ export const sidebarLabels: SidebarLabel[] = [
         path: "/cashboxes",
         level: 2,
         riIcon: "ri-banknote-line",
-        permissions: ["cashbox.view", "cashbox.manage", "cashbox.recalculate"],
+        permissions: ["cashboxes.view", "cashboxes.create", "cashboxes.update", "cashboxes.recalculate"],
         iconComponent: createIcon(Banknote, 18),
       },
       {
@@ -128,7 +128,7 @@ export const sidebarLabels: SidebarLabel[] = [
         path: "/cashboxes/transactions",
         level: 2,
         riIcon: "ri-exchange-line",
-        permissions: ["transactions.view"],
+        permissions: ["cash_movements.view", "cashboxes.view"],
         iconComponent: createIcon(ArrowRightLeft, 18),
       },
       {
@@ -137,7 +137,7 @@ export const sidebarLabels: SidebarLabel[] = [
         path: "/treasury/entries",
         level: 2,
         riIcon: "ri-file-list-2-line",
-        permissions: ["transactions.view"],
+        permissions: ["accounting.journal_entries.view", "accounting.entries.view", "accounting.view"],
         iconComponent: createIcon(FileText, 18),
       },
     ],
