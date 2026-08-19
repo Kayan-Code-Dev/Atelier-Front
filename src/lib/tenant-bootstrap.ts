@@ -43,6 +43,13 @@ export function normalizeTenantFrontendAppUrl(frontend: string): string {
   return s.replace(/\/+$/, "");
 }
 
+/** Vercel/preview hosts are not tenant subdomains — keep session on current origin. */
+export function shouldSkipTenantFrontendRedirect(): boolean {
+  if (typeof window === "undefined") return false;
+  const host = window.location.hostname.toLowerCase();
+  return host.endsWith(".vercel.app") || host === "vercel.app";
+}
+
 /**
  * يُستدعى قبل `persist.rehydrate()`: عند التحويل من اللاندينغ مع `#bootstrap=…`
  * نزيل الجلسة المخزّنة حتى لا تُدمج فوق التوكن القادم من الهاش.

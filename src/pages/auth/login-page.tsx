@@ -12,6 +12,7 @@ import { loadAuthenticatedLayoutRoutesModule } from "@/routes/authenticated-layo
 import {
   buildTenantAuthBootstrapHash,
   normalizeTenantFrontendAppUrl,
+  shouldSkipTenantFrontendRedirect,
 } from "@/lib/tenant-bootstrap";
 import { useAuthStore } from "@/zustand-stores/auth.store";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -59,7 +60,7 @@ const Login = () => {
         onSuccess: (res) => {
           if (!res) return;
           const frontend = res.endpoints?.frontend_app_url?.trim();
-          if (frontend) {
+          if (frontend && !shouldSkipTenantFrontendRedirect()) {
             try {
               const base = normalizeTenantFrontendAppUrl(frontend);
               const targetOrigin = new URL(base).origin;
