@@ -5,6 +5,17 @@ Original tenant app lives in `Front-DressnMore-main` and is unchanged.
 
 Dev server: `http://127.0.0.1:5176`
 
+## Vercel production deploy
+
+`.env.production` is committed and sets the Atelier backend URL. **Also set these in the Vercel dashboard (Production)** — dashboard env vars override `.env.production` at build time:
+
+| Variable | Value |
+| --- | --- |
+| `VITE_TENANT_RELATIVE_API` | `false` |
+| `VITE_BACKEND_URL` | `https://atelier-api.dressnmore.it.com/api/v1` |
+
+If `VITE_TENANT_RELATIVE_API=true` is set in Vercel, login will hit the frontend origin (`/api/tenant/login`) instead of the backend. Remove any conflicting value or set it to `false`, then redeploy.
+
 # React + TypeScript + Vite
 
 
