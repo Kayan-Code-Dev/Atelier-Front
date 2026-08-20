@@ -24,7 +24,7 @@ export const getCategoriesApi = async (page: number, per_page: number) => {
   try {
     const { data } = await api.get<TPaginationResponse<TCategory>>(
       "/dress-categories",
-      { params: { page, per_page } }
+      { params: { page, per_page, only_parents: 1 } }
     );
     return data;
   } catch (error: any) {
