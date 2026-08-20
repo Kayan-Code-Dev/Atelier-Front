@@ -97,7 +97,7 @@ export default function RevenueChart({ sales, financial }: Props) {
                       style={{ marginTop: "-80px", background: "#0C2A42" }}
                     >
                       <p className="font-bold mb-1">{d.name}</p>
-                      <p style={{ color: "#7DD3FC" }}>إيرادات: {fmt(rev)}</p>
+                      <p style={{ color: "#7BC4B5" }}>إيرادات: {fmt(rev)}</p>
                       <p style={{ color: "#A5B4FC" }}>طلبات: {orders}</p>
                     </div>
                   )}
@@ -107,8 +107,8 @@ export default function RevenueChart({ sales, financial }: Props) {
                       style={{
                         height: view === "revenue" ? hRev : hOrd,
                         background: isHovered
-                          ? "linear-gradient(180deg, #0284C7, #0EA5E9)"
-                          : "linear-gradient(180deg, #0EA5E9, #7DD3FC)",
+                          ? "linear-gradient(180deg, #0F8A76, #0D6E5F)"
+                          : "linear-gradient(180deg, #0D6E5F, #7BC4B5)",
                       }}
                     />
                   </div>
@@ -149,7 +149,7 @@ export default function RevenueChart({ sales, financial }: Props) {
               <p className="text-xs mb-0.5" style={{ color: "var(--color-text-muted)" }}>
                 صافي الربح
               </p>
-              <p className="text-sm font-black" style={{ color: "#0EA5E9" }}>
+              <p className="text-sm font-black" style={{ color: "#0D6E5F" }}>
                 {fmt(netProfit)} ج.م
               </p>
             </div>

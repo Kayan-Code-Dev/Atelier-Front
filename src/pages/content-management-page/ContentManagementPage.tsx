@@ -74,7 +74,7 @@ const SETTINGS_GROUPS: SettingsGroup[] = [
         label: "المالية",
         description: "العملات، الخزن، القيود، المصروفات",
         icon: "ri-safe-2-line",
-        color: "#0EA5E9",
+        color: "#0D6E5F",
         permissions: [
           "currencies.view",
           "cashboxes.view",

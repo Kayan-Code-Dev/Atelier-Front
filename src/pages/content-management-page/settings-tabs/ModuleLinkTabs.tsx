@@ -96,7 +96,7 @@ export function NotificationsSettingsTab() {
           description: "عرض وإدارة إشعارات النظام",
           path: "/notifications",
           icon: "ri-notification-3-line",
-          color: "#0EA5E9",
+          color: "#0D6E5F",
         },
       ]}
     />

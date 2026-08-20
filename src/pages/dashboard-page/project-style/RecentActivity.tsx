@@ -5,8 +5,8 @@ const fmt = (n: number) =>
   new Intl.NumberFormat("ar-EG", { maximumFractionDigits: 0 }).format(n);
 
 const typeConfig: Record<string, { icon: string; color: string; bg: string; label: string }> = {
-  buy: { icon: "ri-shopping-bag-3-line", color: "#0EA5E9", bg: "#F0F9FF", label: "بيع" },
-  rent: { icon: "ri-key-2-line", color: "#0369A1", bg: "#E0F2FE", label: "إيجار" },
+  buy: { icon: "ri-shopping-bag-3-line", color: "#0D6E5F", bg: "#E8F2EF", label: "بيع" },
+  rent: { icon: "ri-key-2-line", color: "#0B1F33", bg: "#D8EFE9", label: "إيجار" },
   tailoring: { icon: "ri-scissors-cut-line", color: "#0891B2", bg: "#ECFEFF", label: "تفصيل" },
   mixed: { icon: "ri-file-list-3-line", color: "#7C3AED", bg: "#F5F0FE", label: "مختلط" },
 };

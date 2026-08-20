@@ -15,7 +15,7 @@ import type { Notification } from "@/api/v2/notifications/notifications.types";
 
 const notifStyles: Record<string, { bg: string; color: string; icon: string }> = {
   warning: { bg: "#FEF7E0", color: "#C2820A", icon: "ri-error-warning-line" },
-  info: { bg: "#EBF3FE", color: "#1A3A9B", icon: "ri-information-line" },
+  info: { bg: "#E8F2EF", color: "#0D6E5F", icon: "ri-information-line" },
   success: { bg: "#E8F8F1", color: "#0A6640", icon: "ri-checkbox-circle-line" },
   danger: { bg: "#FEE8E8", color: "#9B1A1A", icon: "ri-alert-line" },
 };
@@ -28,11 +28,11 @@ function getNotifStyle(n: Notification) {
   return notifStyles.info;
 }
 const quickActions = [
-  { icon: "ri-file-add-line", label: "فاتورة بيع", path: "/sales/create", color: "#0EA5E9" },
-  { icon: "ri-key-2-line", label: "فاتورة إيجار", path: "/orders/rental/create", color: "#C2964A" },
-  { icon: "ri-scissors-cut-line", label: "أمر تفصيل", path: "/tailoring/choose-client", color: "#5B1BA6" },
+  { icon: "ri-file-add-line", label: "فاتورة بيع", path: "/sales/create", color: "#0D6E5F" },
+  { icon: "ri-key-2-line", label: "فاتورة إيجار", path: "/orders/rental/create", color: "#143048" },
+  { icon: "ri-scissors-cut-line", label: "أمر تفصيل", path: "/tailoring/choose-client", color: "#3D6B8A" },
   { icon: "ri-user-add-line", label: "عميل جديد", path: "/clients", color: "#0A6640" },
-  { icon: "ri-exchange-line", label: "قيد مالي", path: "/cashboxes", color: "#C2820A" },
+  { icon: "ri-exchange-line", label: "قيد مالي", path: "/cashboxes", color: "#C2783A" },
 ];
 
 interface ProjectTopBarProps {
@@ -68,29 +68,28 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
       style={{
         height: "var(--topbar-height)",
         right: `${sidebarWidth}px`,
-        background: "rgba(255,255,255,0.98)",
+        background: "rgba(255,255,255,0.92)",
         borderBottom: "1px solid var(--color-border)",
-        backdropFilter: "blur(10px)",
+        backdropFilter: "blur(12px)",
         paddingLeft: "16px",
         paddingRight: "16px",
         gap: "12px",
       }}
     >
-      {/* ── Right: Mobile menu + Breadcrumb ── */}
       <div className="flex items-center gap-2.5 min-w-0 flex-shrink-0">
         <button
           onClick={onMobileMenuToggle}
-          className="lg:hidden w-8 h-8 rounded-lg flex items-center justify-center cursor-pointer flex-shrink-0 transition-colors"
-          style={{ background: "#F4F7FB", color: "#4A5568", border: "1px solid var(--color-border)" }}
+          className="lg:hidden w-8 h-8 rounded-md flex items-center justify-center cursor-pointer flex-shrink-0 transition-colors"
+          style={{ background: "var(--chalk)", color: "var(--ink-mid)", border: "1px solid var(--color-border)" }}
         >
           <i className="ri-menu-2-line text-base" />
         </button>
 
         <div
-          className="hidden sm:flex w-8 h-8 rounded-lg items-center justify-center flex-shrink-0"
+          className="hidden sm:flex w-8 h-8 rounded-md items-center justify-center flex-shrink-0"
           style={{
-            background: "linear-gradient(135deg, #0284C7, #0EA5E9)",
-            boxShadow: "0 2px 8px rgba(14,165,233,0.35)",
+            background: "linear-gradient(145deg, #0b1f33, #143048)",
+            boxShadow: "0 2px 6px rgba(11,31,51,0.25)",
           }}
         >
           <i className={`${route.icon} text-white text-[13px]`} />
@@ -113,13 +112,15 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
               {route.title}
             </p>
           )}
-          <h2 className="font-black text-[15px] leading-tight truncate" style={{ color: "var(--color-text-primary)" }}>
+          <h2
+            className="font-bold text-[15px] leading-tight truncate font-display"
+            style={{ color: "var(--color-text-primary)" }}
+          >
             {route.title}
           </h2>
         </div>
       </div>
 
-      {/* ── Center: Search ── */}
       <div className="hidden md:flex flex-1 max-w-[280px] mx-auto">
         <div className="relative w-full">
           <i className="ri-search-line absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none" />
@@ -128,22 +129,22 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="بحث سريع..."
-            className="w-full pr-9 pl-4 py-2 text-[13px] rounded-xl outline-none transition-all"
+            className="w-full pr-9 pl-4 py-2 text-[13px] rounded-md outline-none transition-all"
             style={{
-              background: "#F4F7FB",
+              background: "var(--chalk)",
               border: "1.5px solid var(--color-border)",
-              fontFamily: "Cairo, sans-serif",
+              fontFamily: "var(--font-ui)",
               color: "var(--color-text-primary)",
             }}
             onFocus={(e) => {
-              e.currentTarget.style.borderColor = "#0EA5E9";
-              e.currentTarget.style.boxShadow = "0 0 0 3px rgba(14,165,233,0.15)";
+              e.currentTarget.style.borderColor = "var(--emerald)";
+              e.currentTarget.style.boxShadow = "0 0 0 3px rgba(13,110,95,0.14)";
               e.currentTarget.style.background = "white";
             }}
             onBlur={(e) => {
               e.currentTarget.style.borderColor = "var(--color-border)";
               e.currentTarget.style.boxShadow = "none";
-              e.currentTarget.style.background = "#F4F7FB";
+              e.currentTarget.style.background = "var(--chalk)";
             }}
           />
           {searchQuery && (
@@ -157,11 +158,10 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
         </div>
       </div>
 
-      {/* ── Left: Actions ── */}
       <div className="flex items-center gap-1.5 flex-shrink-0">
         <div
-          className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap"
-          style={{ background: "#F4F7FB", color: "#64748B", border: "1px solid var(--color-border)" }}
+          className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap"
+          style={{ background: "var(--chalk)", color: "var(--color-text-muted)", border: "1px solid var(--color-border)" }}
         >
           <i className="ri-calendar-line" style={{ color: "var(--color-accent)" }} />
           {new Date().toLocaleDateString("ar-EG", { weekday: "short", month: "short", day: "numeric" })}
@@ -174,11 +174,11 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
                 setShowNotif(!showNotif);
                 setShowActions(false);
               }}
-              className="w-8 h-8 rounded-lg flex items-center justify-center cursor-pointer transition-all relative"
+              className="w-8 h-8 rounded-md flex items-center justify-center cursor-pointer transition-all relative"
               style={{
-                background: showNotif ? "#E0F2FE" : "#F4F7FB",
-                border: `1.5px solid ${showNotif ? "#7DD3FC" : "var(--color-border)"}`,
-                color: showNotif ? "#0284C7" : "#4A5568",
+                background: showNotif ? "var(--emerald-muted)" : "var(--chalk)",
+                border: `1.5px solid ${showNotif ? "rgba(13,110,95,0.4)" : "var(--color-border)"}`,
+                color: showNotif ? "var(--emerald)" : "#4A5568",
               }}
             >
               <i className="ri-notification-3-line text-[15px]" />
@@ -194,19 +194,19 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
 
             {showNotif && (
               <div
-                className="absolute left-0 top-11 w-80 rounded-2xl overflow-hidden slide-down z-50"
+                className="absolute left-0 top-11 w-80 rounded-lg overflow-hidden slide-down z-50"
                 style={{
                   background: "white",
                   border: "1px solid var(--color-border)",
                   boxShadow: "var(--shadow-dropdown)",
                 }}
               >
-                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-50">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 flex items-center justify-center rounded-lg" style={{ background: "#E0F2FE" }}>
-                      <i className="ri-notification-3-line text-xs" style={{ color: "#0EA5E9" }} />
+                    <div className="w-6 h-6 flex items-center justify-center rounded-md" style={{ background: "var(--emerald-muted)" }}>
+                      <i className="ri-notification-3-line text-xs" style={{ color: "var(--emerald)" }} />
                     </div>
-                    <h3 className="font-black text-sm" style={{ color: "var(--color-text-primary)" }}>
+                    <h3 className="font-bold text-sm" style={{ color: "var(--color-text-primary)" }}>
                       الإشعارات
                     </h3>
                   </div>
@@ -236,14 +236,14 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
                           key={n.id}
                           className="flex items-start gap-3 px-4 py-3 cursor-pointer transition-colors"
                           style={{
-                            background: isRead ? "transparent" : "rgba(14,165,233,0.025)",
-                            borderBottom: idx < notificationsList.length - 1 ? "1px solid #F8FAFC" : "none",
+                            background: isRead ? "transparent" : "rgba(13,110,95,0.04)",
+                            borderBottom: idx < notificationsList.length - 1 ? "1px solid #F1F4F7" : "none",
                           }}
                           onMouseEnter={(e) => {
-                            (e.currentTarget as HTMLElement).style.background = "#F0F9FF";
+                            (e.currentTarget as HTMLElement).style.background = "var(--emerald-muted)";
                           }}
                           onMouseLeave={(e) => {
-                            (e.currentTarget as HTMLElement).style.background = isRead ? "transparent" : "rgba(14,165,233,0.025)";
+                            (e.currentTarget as HTMLElement).style.background = isRead ? "transparent" : "rgba(13,110,95,0.04)";
                           }}
                           onClick={() => {
                             if (n.action_url || n.metadata?.supplier_id != null) {
@@ -253,7 +253,7 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
                           }}
                         >
                           <div
-                            className="w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center mt-0.5"
+                            className="w-7 h-7 rounded-md flex-shrink-0 flex items-center justify-center mt-0.5"
                             style={{ background: ns.bg }}
                           >
                             <i className={`${ns.icon} text-sm`} style={{ color: ns.color }} />
@@ -277,7 +277,7 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
                           {!isRead && (
                             <span
                               className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5"
-                              style={{ background: "#0EA5E9" }}
+                              style={{ background: "var(--emerald)" }}
                             />
                           )}
                         </div>
@@ -286,16 +286,16 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
                   )}
                 </div>
 
-                <div className="px-4 py-2.5 border-t border-slate-50">
+                <div className="px-4 py-2.5 border-t border-slate-100">
                   <button
                     onClick={() => {
                       navigate("/notifications");
                       setShowNotif(false);
                     }}
-                    className="w-full text-xs font-bold cursor-pointer transition-colors py-1.5 rounded-lg"
-                    style={{ color: "#0EA5E9" }}
+                    className="w-full text-xs font-bold cursor-pointer transition-colors py-1.5 rounded-md"
+                    style={{ color: "var(--emerald)" }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = "#F0F9FF";
+                      (e.currentTarget as HTMLElement).style.background = "var(--emerald-muted)";
                     }}
                     onMouseLeave={(e) => {
                       (e.currentTarget as HTMLElement).style.background = "transparent";
@@ -315,7 +315,7 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
               setShowActions(!showActions);
               setShowNotif(false);
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg cursor-pointer text-[13px] font-bold transition-all whitespace-nowrap blue-btn"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md cursor-pointer text-[13px] font-bold transition-all whitespace-nowrap blue-btn"
           >
             <i className="ri-add-line text-[15px]" />
             <span className="hidden sm:inline">إضافة</span>
@@ -323,15 +323,15 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
 
           {showActions && (
             <div
-              className="absolute left-0 top-11 w-52 rounded-2xl overflow-hidden slide-down z-50"
+              className="absolute left-0 top-11 w-52 rounded-lg overflow-hidden slide-down z-50"
               style={{
                 background: "white",
                 border: "1px solid var(--color-border)",
                 boxShadow: "var(--shadow-dropdown)",
               }}
             >
-              <div className="px-4 py-3 border-b border-slate-50">
-                <p className="text-[11px] font-black uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
+              <div className="px-4 py-3 border-b border-slate-100">
+                <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
                   إضافة سريعة
                 </p>
               </div>
@@ -344,14 +344,14 @@ export default function ProjectTopBar({ sidebarWidth, onMobileMenuToggle }: Proj
                   }}
                   className="flex items-center gap-3 px-4 py-2.5 w-full cursor-pointer text-right transition-colors"
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = "#F8FAFC";
+                    (e.currentTarget as HTMLElement).style.background = "var(--chalk)";
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLElement).style.background = "transparent";
                   }}
                 >
                   <div
-                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                    className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0"
                     style={{ background: `${action.color}15` }}
                   >
                     <i className={`${action.icon} text-sm`} style={{ color: action.color }} />

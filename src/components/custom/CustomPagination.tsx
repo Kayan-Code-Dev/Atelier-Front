@@ -96,9 +96,9 @@ const CustomPagination = ({
             isViolet
               ? undefined
               : {
-                  background: "rgba(3, 105, 161, 0.08)",
-                  border: "1px solid rgba(3, 105, 161, 0.2)",
-                  color: "#0369A1",
+                  background: "rgba(13, 110, 95, 0.08)",
+                  border: "1px solid rgba(13, 110, 95, 0.22)",
+                  color: "#0D6E5F",
                 }
           }
         >

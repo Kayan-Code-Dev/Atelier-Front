@@ -29,9 +29,8 @@ export default function ProjectLayout() {
 
   return (
     <div
-      className="min-h-screen"
+      className="min-h-screen app-shell-bg"
       style={{
-        background: "var(--color-bg)",
         direction: "rtl",
       }}
     >

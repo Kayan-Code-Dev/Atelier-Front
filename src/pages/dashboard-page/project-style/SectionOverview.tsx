@@ -39,15 +39,15 @@ export default function SectionOverview({ financial }: Props) {
           <button
             onClick={() => navigate("/cashboxes")}
             className="text-xs font-bold cursor-pointer transition-colors"
-            style={{ color: "#0284C7" }}
+            style={{ color: "var(--emerald)" }}
           >
             كشف المعاملات ←
           </button>
         </div>
 
         <div
-          className="rounded-xl p-4 mb-4 text-white text-center"
-          style={{ background: "linear-gradient(135deg, #0369A1, #0EA5E9)" }}
+          className="rounded-lg p-4 mb-4 text-white text-center"
+          style={{ background: "linear-gradient(145deg, #0b1f33, #143048)" }}
         >
           <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.70)" }}>
             إجمالي أرصدة الصناديق

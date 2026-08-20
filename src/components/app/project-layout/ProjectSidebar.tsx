@@ -64,7 +64,7 @@ function flattenSubItems(item: SidebarLabel): Pick<
   });
 }
 
-const SIDEBAR_SCROLL_KEY = "dressnmore.project-sidebar.scrollTop";
+const SIDEBAR_SCROLL_KEY = "atelier.project-sidebar.scrollTop";
 
 export default function ProjectSidebar({
   collapsed,
@@ -128,10 +128,10 @@ export default function ProjectSidebar({
   };
 
   const renderedSections = new Set<string>();
-  const sidebarBg = "linear-gradient(160deg, #0369A1 0%, #0284C7 35%, #0EA5E9 100%)";
+  const sidebarBg = "var(--sidebar-gradient)";
   const activeItemStyle = {
     color: "#ffffff",
-    background: "rgba(255,255,255,0.22)",
+    background: "rgba(13,110,95,0.38)",
     fontWeight: "700" as const,
   };
   const inactiveItemStyle = {
@@ -139,7 +139,7 @@ export default function ProjectSidebar({
     background: "transparent",
     fontWeight: "500" as const,
   };
-  const hoverStyle = { background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.95)" };
+  const hoverStyle = { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.95)" };
 
   return (
     <>
@@ -173,10 +173,10 @@ export default function ProjectSidebar({
         >
           {!collapsed && (
             <div
-              className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center"
+              className="flex-shrink-0 w-8 h-8 rounded-md flex items-center justify-center"
               style={{
-                background: "linear-gradient(135deg, #B8862A 0%, #E8BF7A 50%, #B8862A 100%)",
-                boxShadow: "0 2px 10px rgba(194,150,74,0.45)",
+                background: "linear-gradient(145deg, #0d6e5f 0%, #0f8a76 100%)",
+                boxShadow: "0 2px 8px rgba(13,110,95,0.4)",
               }}
             >
               <i className="ri-scissors-cut-fill text-white text-sm" />
@@ -185,14 +185,16 @@ export default function ProjectSidebar({
 
           {!collapsed && (
             <div className="flex-1 min-w-0 fade-in overflow-hidden">
-              <p className="text-white font-black text-[13px] leading-tight truncate">
+              <p
+                className="text-white font-brand font-bold text-[15px] leading-tight truncate tracking-tight"
+              >
                 Atelier
               </p>
               <p
                 className="text-[10px] truncate mt-0.5 font-semibold"
-                style={{ color: "#C2964A", letterSpacing: "0.04em" }}
+                style={{ color: "rgba(15,138,118,0.95)", letterSpacing: "0.08em" }}
               >
-                نظام إدارة الأتيليه
+                STUDIO OPS
               </p>
             </div>
           )}
@@ -304,12 +306,12 @@ export default function ProjectSidebar({
                                   className="flex items-center gap-2 px-2.5 py-2 rounded-lg cursor-pointer transition-all duration-150 whitespace-nowrap"
                                   style={{
                                     color: subActive ? "#ffffff" : "rgba(255,255,255,0.55)",
-                                    background: subActive ? "rgba(255,255,255,0.18)" : "transparent",
+                                    background: subActive ? "rgba(13,110,95,0.32)" : "transparent",
                                     fontWeight: subActive ? "700" : "500",
                                   }}
                                   onMouseEnter={(e) => {
                                     if (!subActive) {
-                                      (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.10)";
+                                      (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.08)";
                                       (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.90)";
                                     }
                                   }}
@@ -394,11 +396,11 @@ export default function ProjectSidebar({
             }}
           >
             <div
-              className="w-8 h-8 rounded-xl flex-shrink-0 flex items-center justify-center font-black text-sm"
+              className="w-8 h-8 rounded-md flex-shrink-0 flex items-center justify-center font-black text-sm"
               style={{
-                background: "linear-gradient(135deg, #B8862A, #E8BF7A)",
+                background: "linear-gradient(145deg, #0d6e5f, #0f8a76)",
                 color: "white",
-                boxShadow: "0 1px 5px rgba(194,150,74,0.40)",
+                boxShadow: "0 1px 5px rgba(13,110,95,0.40)",
               }}
             >
               {userInitials}

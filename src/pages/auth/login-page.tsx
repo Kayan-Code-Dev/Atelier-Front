@@ -86,47 +86,87 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-950 to-slate-900 relative overflow-hidden flex items-center justify-center px-4 py-12" dir="rtl">
+    <div
+      className="min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-12"
+      dir="rtl"
+      style={{
+        background:
+          "radial-gradient(ellipse 70% 50% at 10% 20%, rgba(13,110,95,0.18), transparent 50%), radial-gradient(ellipse 60% 40% at 90% 80%, rgba(11,31,51,0.12), transparent 45%), #eef1f4",
+      }}
+    >
       <style>{`
-        @keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
-        @keyframes blob { 0%,100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%} 50%{border-radius:30% 60% 70% 40%/50% 60% 30% 60%} }
-        .shimmer-text { background: linear-gradient(90deg, #1e40af, #0ea5e9, #1e40af); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 3s linear infinite; }
-        .blob { animation: blob 8s ease-in-out infinite; }
-        .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.15); }
-        .glass-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.2); }
-        .text-gradient { background: linear-gradient(135deg, #1e3a8a, #0ea5e9, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .login-grid {
+          background-image:
+            linear-gradient(rgba(11,31,51,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(11,31,51,0.04) 1px, transparent 1px);
+          background-size: 32px 32px;
+        }
+        .login-card-enter {
+          animation: pageEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
       `}</style>
 
-      {/* Background effects */}
-      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(59,130,246,0.5) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(14,165,233,0.3) 0%, transparent 50%)' }} />
-      <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.05) 1px,transparent 1px)', backgroundSize: '40px 40px' }} />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 blob" style={{ filter: 'blur(60px)' }} />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-cyan-400/10 blob" style={{ filter: 'blur(50px)', animationDelay: '3s' }} />
+      <div className="absolute inset-0 login-grid pointer-events-none" />
+      <div
+        className="absolute inset-0 pointer-events-none opacity-40"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E\")",
+        }}
+      />
 
-      <div className="relative z-10 w-full max-w-md">
-        {/* Back to home */}
+      <div className="relative z-10 w-full max-w-md login-card-enter">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm font-medium mb-8 transition-colors duration-300"
+          className="inline-flex items-center gap-2 text-sm font-medium mb-8 transition-colors duration-200"
+          style={{ color: "var(--color-text-secondary)" }}
         >
           <i className="ri-arrow-right-line text-lg" />
           العودة للرئيسية
         </Link>
 
-        <div className="glass-card rounded-3xl shadow-2xl overflow-hidden">
-          {/* Header */}
-          <div className="bg-gradient-to-l from-blue-900 to-blue-600 px-8 py-8 text-center">
-            <Link to="/" className="inline-flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 flex items-center justify-center rounded-xl overflow-hidden bg-white shadow-md">
-                <img src="/dressnmore-logo.jpg" alt="DressnMore" className="w-full h-full object-cover" />
+        <div
+          className="overflow-hidden"
+          style={{
+            background: "white",
+            border: "1px solid var(--color-border)",
+            borderRadius: "12px",
+            boxShadow: "0 16px 40px rgba(11,31,51,0.1)",
+          }}
+        >
+          <div
+            className="px-8 py-9 text-center"
+            style={{
+              background: "linear-gradient(155deg, #071521 0%, #0b1f33 55%, #143048 100%)",
+            }}
+          >
+            <Link to="/" className="inline-flex flex-col items-center gap-3 mb-5">
+              <div
+                className="w-12 h-12 flex items-center justify-center rounded-md"
+                style={{
+                  background: "linear-gradient(145deg, #0d6e5f, #0f8a76)",
+                  boxShadow: "0 4px 14px rgba(13,110,95,0.45)",
+                }}
+              >
+                <i className="ri-scissors-cut-fill text-white text-xl" />
               </div>
-              <span className="text-2xl font-black text-white tracking-tight">DressnMore</span>
+              <span
+                className="font-brand text-3xl font-bold tracking-tight text-white"
+                style={{ letterSpacing: "-0.02em" }}
+              >
+                Atelier
+              </span>
             </Link>
-            <h1 className="text-xl font-bold text-white mb-2">تسجيل الدخول</h1>
-            <p className="text-white/80 text-sm">أدخل بياناتك للوصول إلى لوحة التحكم</p>
+            <p
+              className="text-[11px] font-semibold uppercase tracking-[0.18em] mb-4"
+              style={{ color: "rgba(15,138,118,0.95)" }}
+            >
+              Studio Operations
+            </p>
+            <h1 className="text-xl font-bold text-white mb-2 font-display">تسجيل الدخول</h1>
+            <p className="text-white/70 text-sm">أدخل بياناتك للوصول إلى لوحة التحكم</p>
           </div>
 
-          {/* Form */}
           <div className="p-8">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5" dir="rtl">
@@ -135,17 +175,17 @@ const Login = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-right text-sm font-medium text-gray-700">
+                      <FormLabel className="text-right text-sm font-medium" style={{ color: "var(--color-text-secondary)" }}>
                         البريد الإلكتروني
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
-                            placeholder="example@dressnmore.com"
-                            className="pr-4 pl-11 text-right h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                            placeholder="you@atelier.app"
+                            className="pr-4 pl-11 text-right h-11 rounded-md border-[var(--color-border)] focus-visible:border-[var(--emerald)] focus-visible:ring-[var(--emerald)]/20"
                             {...field}
                           />
-                          <i className="ri-user-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
+                          <i className="ri-user-line absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg" />
                         </div>
                       </FormControl>
                       <FormMessage className="text-right text-xs text-red-500" />
@@ -158,7 +198,7 @@ const Login = () => {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-right text-sm font-medium text-gray-700">
+                      <FormLabel className="text-right text-sm font-medium" style={{ color: "var(--color-text-secondary)" }}>
                         كلمة المرور
                       </FormLabel>
                       <FormControl>
@@ -166,7 +206,7 @@ const Login = () => {
                           <Input
                             type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
-                            className="pr-4 pl-11 h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
+                            className="pr-4 pl-11 h-11 rounded-md border-[var(--color-border)] focus-visible:border-[var(--emerald)] focus-visible:ring-[var(--emerald)]/20"
                             {...field}
                           />
                           <button
@@ -185,10 +225,11 @@ const Login = () => {
                 />
 
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="text-gray-500">جلسات آمنة ومشفرة</span>
+                  <span style={{ color: "var(--color-text-muted)" }}>جلسات آمنة ومشفرة</span>
                   <Link
                     to="/forget-password"
-                    className="text-blue-600 hover:text-blue-700 font-medium"
+                    className="font-medium transition-colors"
+                    style={{ color: "var(--emerald)" }}
                   >
                     نسيت كلمة المرور؟
                   </Link>
@@ -197,7 +238,11 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="w-full h-12 rounded-xl bg-gradient-to-l from-blue-900 to-blue-500 text-white font-bold text-base hover:shadow-lg hover:shadow-blue-500/40 hover:scale-[1.02] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full h-11 rounded-md text-white font-bold text-base transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  style={{
+                    background: "linear-gradient(135deg, #0d6e5f, #0f8a76)",
+                    boxShadow: "0 2px 10px rgba(13,110,95,0.28)",
+                  }}
                 >
                   {isPending ? (
                     <>
@@ -214,20 +259,19 @@ const Login = () => {
               </form>
             </Form>
 
-            <p className="mt-6 text-xs text-gray-500 text-center">
+            <p className="mt-6 text-xs text-center" style={{ color: "var(--color-text-muted)" }}>
               يتم تأمين البيانات وتشفيرها لحماية معلوماتك
             </p>
           </div>
         </div>
       </div>
 
-      {/* Login Error Dialog */}
       <Dialog open={loginError} onOpenChange={setLoginError}>
-        <DialogContent className="max-w-md rounded-2xl p-6 text-center border-0 shadow-2xl" dir="rtl">
+        <DialogContent className="max-w-md rounded-lg p-6 text-center border-0 shadow-xl" dir="rtl">
           <div className="w-16 h-16 flex items-center justify-center bg-red-50 rounded-full mx-auto mb-4">
             <i className="ri-error-warning-line text-red-500 text-3xl" />
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">فشل تسجيل الدخول</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-2 font-display">فشل تسجيل الدخول</h2>
           <p className="mb-6 text-sm text-gray-500">
             تأكد من صحة البريد الإلكتروني وكلمة المرور ثم حاول مرة أخرى.
           </p>
@@ -235,7 +279,7 @@ const Login = () => {
             <Button
               variant="outline"
               onClick={() => setLoginError(false)}
-              className="flex-1 rounded-xl"
+              className="flex-1 rounded-md"
             >
               إلغاء
             </Button>
@@ -244,7 +288,8 @@ const Login = () => {
                 form.reset();
                 setLoginError(false);
               }}
-              className="flex-1 rounded-xl bg-gradient-to-l from-blue-900 to-blue-500"
+              className="flex-1 rounded-md"
+              style={{ background: "var(--emerald)" }}
             >
               إعادة المحاولة
             </Button>
