@@ -44,6 +44,8 @@ type AtelierEnvelope = {
  * Normalize Atelier `{ success, data, meta }` envelopes into the shapes the
  * DressnMore-era FE services expect (paginated `{ data, current_page, ... }`
  * or a bare resource object).
+ *
+ * Skips auth login payloads so token unwrapping stays intact.
  */
 export function normalizeAtelierEnvelope(payload: unknown): unknown {
   if (!payload || typeof payload !== "object") return payload;
@@ -51,6 +53,16 @@ export function normalizeAtelierEnvelope(payload: unknown): unknown {
   if (envelope.success !== true || !("data" in envelope)) return payload;
 
   const inner = envelope.data;
+  // Keep login / auth payloads as envelopes when nested token shape is used,
+  // or pass through objects that already look like login responses.
+  if (
+    inner &&
+    typeof inner === "object" &&
+    !Array.isArray(inner) &&
+    ("token" in (inner as object) || "endpoints" in (inner as object))
+  ) {
+    return inner;
+  }
   const meta =
     envelope.meta && typeof envelope.meta === "object" && !Array.isArray(envelope.meta)
       ? (envelope.meta as AtelierMeta)
