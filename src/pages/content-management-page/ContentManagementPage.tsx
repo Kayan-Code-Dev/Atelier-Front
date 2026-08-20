@@ -3,13 +3,16 @@ import { Outlet, useLocation, useNavigate } from "react-router";
 import { useMyPermissions } from "@/api/auth/auth.hooks";
 
 type ContentTabId =
+  | "company"
   | "profile"
   | "branches"
+  | "financial"
   | "currencies"
   | "product-taxonomy"
   | "invoice-rules"
-  | "quotas"
-  | "subscription";
+  | "notifications"
+  | "users"
+  | "system";
 
 type TabDef = {
   id: ContentTabId;
@@ -29,24 +32,27 @@ type SettingsGroup = {
 
 const SETTINGS_GROUPS: SettingsGroup[] = [
   {
-    id: "account",
-    label: "1) الحساب",
+    id: "business",
+    label: "المنشأة",
     tabs: [
+      {
+        id: "company",
+        path: "/content/company",
+        label: "الشركة",
+        description: "الاسم، التواصل، الضريبة والسجل",
+        icon: "ri-building-2-line",
+        color: "#0C1A3E",
+        permissions: ["settings.view", "settings.manage", "dashboard.view"],
+      },
       {
         id: "profile",
         path: "/content/profile",
         label: "الملف الشخصي",
-        description: "الاسم، الصورة، وكلمة المرور",
+        description: "حسابك، الصورة، وكلمة المرور",
         icon: "ri-user-3-line",
         color: "#3B82F6",
         permissions: [],
       },
-    ],
-  },
-  {
-    id: "operations",
-    label: "2) التشغيل",
-    tabs: [
       {
         id: "branches",
         path: "/content/branches",
@@ -56,68 +62,86 @@ const SETTINGS_GROUPS: SettingsGroup[] = [
         color: "#C2964A",
         permissions: ["branches.view"],
       },
+    ],
+  },
+  {
+    id: "ops",
+    label: "التشغيل",
+    tabs: [
+      {
+        id: "financial",
+        path: "/content/financial",
+        label: "المالية",
+        description: "العملات، الخزن، القيود، المصروفات",
+        icon: "ri-safe-2-line",
+        color: "#0EA5E9",
+        permissions: [
+          "currencies.view",
+          "cashboxes.view",
+          "expenses.view",
+          "accounting.view",
+          "accounting.journal_entries.view",
+        ],
+      },
       {
         id: "currencies",
         path: "/content/currencies",
         label: "العملات",
-        description: "العملات المعتمدة في النظام",
+        description: "إدارة قائمة العملات",
         icon: "ri-exchange-dollar-line",
         color: "#0C1A3E",
         permissions: ["currencies.view"],
       },
-    ],
-  },
-  {
-    id: "catalog",
-    label: "3) المنتجات",
-    tabs: [
       {
         id: "product-taxonomy",
         path: "/content/product-taxonomy",
-        label: "الأصناف والتصنيفات",
+        label: "المخزون والأصناف",
         description: "أقسام المنتجات والأقسام الفرعية",
         icon: "ri-folder-3-line",
         color: "#10B981",
         permissions: ["categories.view", "subcategories.view"],
       },
-    ],
-  },
-  {
-    id: "documents",
-    label: "4) الفواتير والطباعة",
-    tabs: [
       {
         id: "invoice-rules",
         path: "/content/invoice-rules",
-        label: "قواعد طباعة الفواتير",
-        description: "ما يظهر على فاتورة العميل والإيصال",
+        label: "الفواتير والمستندات",
+        description: "قوالب الطباعة وشروط الفاتورة",
         icon: "ri-printer-line",
         color: "#6366F1",
-        permissions: [],
+        permissions: ["settings.view", "settings.manage", "dashboard.view"],
       },
     ],
   },
   {
-    id: "billing",
-    label: "5) الاشتراك والكوتة",
+    id: "people",
+    label: "الأشخاص والنظام",
     tabs: [
       {
-        id: "quotas",
-        path: "/content/quotas",
-        label: "الكوتة والاستهلاك",
-        description: "عداد شهري للشات والفواتير",
-        icon: "ri-pie-chart-2-line",
-        color: "#0EA5E9",
-        permissions: [],
+        id: "notifications",
+        path: "/content/notifications",
+        label: "الإشعارات",
+        description: "اختصار لمركز الإشعارات",
+        icon: "ri-notification-3-line",
+        color: "#F59E0B",
+        permissions: ["notifications.view", "notifications.manage"],
       },
       {
-        id: "subscription",
-        path: "/content/subscription",
-        label: "الباقة والاشتراك",
-        description: "الباقة الحالية والأيام المتبقية",
-        icon: "ri-vip-crown-2-line",
+        id: "users",
+        path: "/content/users",
+        label: "المستخدمون والصلاحيات",
+        description: "الموظفون وحسابك",
+        icon: "ri-shield-user-line",
         color: "#8B5CF6",
-        permissions: [],
+        permissions: ["hr.employees.view", "dashboard.view"],
+      },
+      {
+        id: "system",
+        path: "/content/system",
+        label: "النظام",
+        description: "اللغة، المنطقة الزمنية، العملة الافتراضية",
+        icon: "ri-settings-3-line",
+        color: "#64748B",
+        permissions: ["settings.view", "settings.manage", "dashboard.view"],
       },
     ],
   },
@@ -176,7 +200,7 @@ function ContentManagementPage() {
           <div>
             <h1 className="text-lg font-black text-slate-800">الإعدادات</h1>
             <p className="text-xs text-slate-400 mt-0.5">
-              تسلسل منظم: الحساب ← التشغيل ← المنتجات ← الطباعة ← الكوتة والاشتراك
+              إعدادات المنشأة والتشغيل والمستندات — بدون اشتراك أو كوتة
             </p>
           </div>
         </div>

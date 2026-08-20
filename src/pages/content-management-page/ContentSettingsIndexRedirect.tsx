@@ -3,18 +3,42 @@ import { useNavigate } from "react-router";
 import { Loader2 } from "lucide-react";
 import { useMyPermissions } from "@/api/auth/auth.hooks";
 
-/** ترتيب التوجيه الافتراضي لـ `/content` — يتبع تسلسل الإعدادات */
+/** ترتيب التوجيه الافتراضي لـ `/content` — إعدادات أتيليه التشغيلية */
 const ORDER: { segment: string; permissions: string[] }[] = [
+  { segment: "company", permissions: ["settings.view", "settings.manage", "dashboard.view"] },
   { segment: "profile", permissions: [] },
   { segment: "branches", permissions: ["branches.view"] },
+  {
+    segment: "financial",
+    permissions: [
+      "currencies.view",
+      "cashboxes.view",
+      "expenses.view",
+      "accounting.view",
+      "accounting.journal_entries.view",
+    ],
+  },
   { segment: "currencies", permissions: ["currencies.view"] },
   {
     segment: "product-taxonomy",
     permissions: ["categories.view", "subcategories.view"],
   },
-  { segment: "invoice-rules", permissions: [] },
-  { segment: "quotas", permissions: [] },
-  { segment: "subscription", permissions: [] },
+  {
+    segment: "invoice-rules",
+    permissions: ["settings.view", "settings.manage", "dashboard.view"],
+  },
+  {
+    segment: "notifications",
+    permissions: ["notifications.view", "notifications.manage"],
+  },
+  {
+    segment: "users",
+    permissions: ["hr.employees.view", "dashboard.view"],
+  },
+  {
+    segment: "system",
+    permissions: ["settings.view", "settings.manage", "dashboard.view"],
+  },
 ];
 
 function canAccess(entry: (typeof ORDER)[0], perms: string[]): boolean {

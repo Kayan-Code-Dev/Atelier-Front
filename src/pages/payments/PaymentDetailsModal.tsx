@@ -278,8 +278,9 @@ export function PaymentDetailsModal({ payment, open, onOpenChange }: Props) {
             payment.cashbox_balance_before == null &&
             payment.cashbox_balance_after == null &&
             !payment.cashbox_snapshot_meta && (
-              <p className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs text-slate-500">
-                لا تتوفر لقطة خزنة لهذه الدفعة (قد تكون من سجلات قديمة أو لم تُسجَّل في الصندوق بعد).
+              <p className="rounded-lg border border-amber-100 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                لم تُربط هذه الدفعة بصندوق نقدي (cashbox). قد تكون دفعة مبكرة أو سجلاً قديماً —
+                اختر صندوقاً عند تسجيل دفعات جديدة حتى تظهر في الخزنة.
               </p>
             )}
 
