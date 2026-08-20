@@ -32,7 +32,7 @@ export function ClientsSelect({
 }: Props) {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce({ value: search, delay: 500 });
-  const { hasPermission, isPending } = useHasPermission("clients.view");
+  const { hasPermission, isPending } = useHasPermission("customers.view");
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({

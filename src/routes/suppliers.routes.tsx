@@ -14,8 +14,8 @@ export const suppliersRoutes = () => {
           permission={[
             "suppliers.view",
             "suppliers.create",
-            "supplier-orders.view",
-            "supplier-orders.create",
+            "purchase_orders.view",
+            "purchase_orders.create",
           ]}
         />
       }

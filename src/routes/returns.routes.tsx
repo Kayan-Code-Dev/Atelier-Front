@@ -7,7 +7,7 @@ export const returnsRoutes = () => {
     <Route
       path="/returns"
       element={
-        <PermissionProtectedRoute permission={["orders.return"]} />
+        <PermissionProtectedRoute permission={["invoice_delivery.return", "invoice_delivery.view"]} />
       }
     >
       <Route index element={<ReturnsList />} />

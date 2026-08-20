@@ -8,11 +8,14 @@ type LoginEnvelope = {
   data?: TLoginResponse;
 };
 
-/** Public landing uses /api/v1; tenant auth lives under /api/tenant. */
+/** Public landing may use /api/v1; tenant auth lives under /api/tenant. */
 function resolveLoginUrl(): string {
   const base = String(api.defaults.baseURL ?? "").replace(/\/+$/, "");
   if (/\/api\/v1$/i.test(base)) {
     return `${base.replace(/\/api\/v1$/i, "/api/tenant")}/login`;
+  }
+  if (/\/api\/tenant$/i.test(base)) {
+    return "/login";
   }
   return "/login";
 }

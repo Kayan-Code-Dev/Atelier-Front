@@ -8,7 +8,7 @@ export const overduereturnsRoutes = () => {
       path="/overdue-returns"
       element={
         <PermissionProtectedRoute
-          permission={["orders.return", "orders.view"]}
+          permission={["invoice_delivery.return", "invoices.view"]}
         />
       }
     >

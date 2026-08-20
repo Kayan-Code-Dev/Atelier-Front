@@ -226,7 +226,7 @@ export const sidebarLabels: SidebarLabel[] = [
     level: 1,
     section: "العمليات",
     riIcon: "ri-key-2-line",
-    permissions: ["orders.view", "orders.create", "orders.update", "orders.delete", "orders.export"],
+    permissions: ["invoices.view", "invoices.create", "invoices.update", "invoices.delete", "invoices.export"],
     iconComponent: createIcon(KeyRound),
     activeExclude: {
       pathname: "/orders/list",
@@ -241,7 +241,7 @@ export const sidebarLabels: SidebarLabel[] = [
     level: 1,
     section: "العمليات",
     riIcon: "ri-truck-line",
-    permissions: ["orders.deliver", "orders.return", "orders.finish", "orders.cancel"],
+    permissions: ["invoice_delivery.view", "invoice_delivery.deliver", "invoice_delivery.return", "invoices.view", "invoices.cancel"],
     iconComponent: createIcon(Truck),
     subItems: [
       {
@@ -250,7 +250,7 @@ export const sidebarLabels: SidebarLabel[] = [
         path: "/deliveries",
         level: 2,
         riIcon: "ri-truck-line",
-        permissions: ["orders.deliver"],
+        permissions: ["invoice_delivery.deliver", "invoice_delivery.view"],
         iconComponent: createIcon(Truck),
       },
       {
@@ -259,7 +259,7 @@ export const sidebarLabels: SidebarLabel[] = [
         path: "/orders/search-deliveries-returns",
         level: 2,
         riIcon: "ri-search-2-line",
-        permissions: ["orders.view", "orders.export", "orders.deliver", "orders.return"],
+        permissions: ["invoices.view", "invoices.export", "invoice_delivery.deliver", "invoice_delivery.return"],
         iconComponent: createIcon(Search),
       },
       {
@@ -268,7 +268,7 @@ export const sidebarLabels: SidebarLabel[] = [
         path: "/returns",
         level: 2,
         riIcon: "ri-arrow-go-back-line",
-        permissions: ["orders.return"],
+        permissions: ["invoice_delivery.return", "invoice_delivery.view"],
         iconComponent: createIcon(RotateCcw),
       },
       {
@@ -277,7 +277,7 @@ export const sidebarLabels: SidebarLabel[] = [
         path: "/overdue-returns",
         level: 2,
         riIcon: "ri-time-line",
-        permissions: ["orders.return", "orders.view"],
+        permissions: ["invoice_delivery.return", "invoices.view"],
         iconComponent: createIcon(Clock),
       },
     ],
@@ -290,7 +290,7 @@ export const sidebarLabels: SidebarLabel[] = [
     level: 1,
     section: "الإدارة",
     riIcon: "ri-group-line",
-    permissions: ["clients.view", "clients.create", "clients.update", "clients.delete", "clients.export", "clients.measurements.view", "clients.measurements.update"],
+    permissions: ["customers.view", "customers.create", "customers.update", "customers.delete", "customers.export"],
     iconComponent: createIcon(Users),
   },
   {
@@ -348,7 +348,7 @@ export const sidebarLabels: SidebarLabel[] = [
     level: 1,
     section: "الإدارة",
     riIcon: "ri-shopping-cart-2-line",
-    permissions: ["suppliers.view", "suppliers.create", "suppliers.update", "suppliers.delete", "suppliers.export", "supplier-orders.view", "supplier-orders.create", "supplier-orders.update", "supplier-orders.delete", "supplier-orders.export"],
+    permissions: ["suppliers.view", "suppliers.create", "suppliers.update", "suppliers.delete", "suppliers.export", "purchase_orders.view", "purchase_orders.create", "purchase_orders.update", "purchase_orders.delete", "purchase_orders.export"],
     iconComponent: createIcon(ShoppingCart),
     subItems: [
       {
@@ -366,7 +366,7 @@ export const sidebarLabels: SidebarLabel[] = [
         path: "/suppliers/orders",
         level: 2,
         riIcon: "ri-file-text-line",
-        permissions: ["supplier-orders.view", "supplier-orders.create", "supplier-orders.update", "supplier-orders.delete"],
+        permissions: ["purchase_orders.view", "purchase_orders.create", "purchase_orders.update", "purchase_orders.delete"],
         iconComponent: createIcon(FileText),
       },
       {
@@ -375,7 +375,7 @@ export const sidebarLabels: SidebarLabel[] = [
         path: "/suppliers/accounts",
         level: 2,
         riIcon: "ri-file-chart-line",
-        permissions: ["suppliers.view", "supplier-orders.view"],
+        permissions: ["suppliers.view", "purchase_orders.view"],
         iconComponent: createIcon(FileBarChart),
       },
     ],
@@ -682,7 +682,7 @@ export const sidebarLabels: SidebarLabel[] = [
     level: 1,
     section: "المخزون",
     riIcon: "ri-price-tag-3-line",
-    permissions: ["clothes.view", "clothes.create", "clothes.update", "clothes.delete", "clothes.export", "inventories.view", "transfers.view", "transfers.create", "transfers.update", "transfers.delete", "transfers.approve", "transfers.reject", "transfers.export"],
+    permissions: ["dresses.view", "dresses.create", "dresses.update", "dresses.delete", "dresses.export", "inventory.view", "inventory.manage"],
     iconComponent: createIcon(Package),
     subItems: [
       {
@@ -691,7 +691,7 @@ export const sidebarLabels: SidebarLabel[] = [
         path: "/clothes/list",
         level: 2,
         riIcon: "ri-list-check-2",
-        permissions: ["clothes.view", "clothes.export"],
+        permissions: ["dresses.view", "dresses.export"],
         iconComponent: createIcon(List),
       },
       {
@@ -701,11 +701,9 @@ export const sidebarLabels: SidebarLabel[] = [
         level: 2,
         riIcon: "ri-arrow-left-right-line",
         permissions: [
-          "transfers.view",
-          "transfers.create",
-          "transfers.update",
-          "transfers.approve",
-          "transfers.reject",
+          "inventory.view",
+          "inventory.manage",
+          "dresses.update",
         ],
         iconComponent: createIcon(ArrowRightLeft),
       },

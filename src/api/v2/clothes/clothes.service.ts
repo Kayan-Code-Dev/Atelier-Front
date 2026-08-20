@@ -15,7 +15,7 @@ import { TEntity } from "@/lib/types/entity.types";
 export const getClothes = async (params: TGetClothesRequestParams) => {
   try {
     const { data } = await api.get<TPaginationResponse<TClothResponse>>(
-      "/clothes",
+      "/dresses",
       { params }
     );
     return data;
@@ -27,7 +27,7 @@ export const getClothes = async (params: TGetClothesRequestParams) => {
 export const createClothes = async (data: TCreateClothesRequest) => {
   try {
     const { data: responseData } = await api.post<TClothResponse>(
-      "/clothes",
+      "/dresses",
       data
     );
     return responseData;
@@ -42,7 +42,7 @@ export const updateClothes = async (
 ) => {
   try {
     const { data: responseData } = await api.put<TClothResponse>(
-      `/clothes/${id}`,
+      `/dresses/${id}`,
       data
     );
     return responseData;
@@ -54,7 +54,7 @@ export const updateClothes = async (
 export const deleteClothes = async (id: number) => {
   try {
     const { data: responseData } = await api.delete<TClothResponse>(
-      `/clothes/${id}`
+      `/dresses/${id}`
     );
     return responseData;
   } catch (error: any) {
@@ -65,7 +65,7 @@ export const deleteClothes = async (id: number) => {
 export const getClothesById = async (id: number) => {
   try {
     const { data: responseData } = await api.get<TClothResponse>(
-      `/clothes/${id}`
+      `/dresses/${id}`
     );
     return responseData;
   } catch (error: any) {
@@ -78,7 +78,7 @@ export const getClothOrders = async (clothId: number) => {
   try {
     const { data: responseData } = await api.get<
       TClothOrdersResponse | { data: TClothOrdersResponse }
-    >(`/clothes/${clothId}/orders`);
+    >(`/dresses/${clothId}/order-history`);
     const result =
       responseData && "data" in responseData && responseData.data
         ? responseData.data
@@ -105,7 +105,7 @@ export const getClothesAvialbelByDate = async (
   try {
     const { data: responseData } =
       await api.get<TClothesAvailableForDateResponse>(
-        `/clothes/available-for-date`,
+        `/dresses/available-for-date`,
         { params: { delivery_date: date, entity_type, entity_id } }
       );
     return responseData;
@@ -118,12 +118,14 @@ export const getClothethesUnavailableDaysRangesbyIds = async (
   ids: number[]
 ) => {
   try {
-    const { data: responseData } =
-      await api.get<TClothesUnavailableDaysRangesResponse>(
-        `/clothes/unavailable-days`,
-        { params: { cloth_ids: ids } }
-      );
-    return responseData;
+    // Backend exposes unavailable days per dress; aggregate client-side.
+    const ranges = await Promise.all(
+      ids.map(async (id) => {
+        const { data } = await api.get(`/dresses/${id}/unavailable-days`);
+        return { cloth_id: id, ...(data as object) };
+      }),
+    );
+    return { data: ranges } as unknown as TClothesUnavailableDaysRangesResponse;
   } catch (error: any) {
     populateError(error, "خطأ فى جلب المنتجات غير المتاحة للتاريخ");
   }
@@ -132,7 +134,7 @@ export const getClothethesUnavailableDaysRangesbyIds = async (
 
 export const exportClothesToCSV = async (params?: Record<string, unknown>) => {
   try {
-    const response = await api.get<Blob>(`/clothes/export`, {
+    const response = await api.get<Blob>(`/dresses/export`, {
       params,
       responseType: "blob",
     });
@@ -147,7 +149,7 @@ export const importClothes = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
 
-    const { data } = await api.post<unknown>(`/clothes/import`, formData);
+    const { data } = await api.post<unknown>(`/dresses/import`, formData);
     return data;
   } catch (error: any) {
     populateError(error, "خطأ فى استيراد المنتجات");

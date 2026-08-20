@@ -7,7 +7,7 @@ import {
   TUpdateClientRequest,
 } from "./clients.types";
 
-/** Optional filters for GET /api/v1/clients (index) */
+/** Optional filters for GET /api/tenant/customers (index) */
 export type TGetClientsParams = {
   search?: string;
   id?: number | string;
@@ -42,7 +42,7 @@ export const getClients = async (
         : {}),
     };
     const { data } = await api.get<TPaginationResponse<TClientResponse>>(
-      "/clients",
+      "/customers",
       { params: query }
     );
     return data;
@@ -54,7 +54,7 @@ export const getClients = async (
 export const createClient = async (data: TCreateClientRequest) => {
   try {
     const { data: response } = await api.post<TClientResponse>(
-      "/clients",
+      "/customers",
       data
     );
     return response;
@@ -66,7 +66,7 @@ export const createClient = async (data: TCreateClientRequest) => {
 export const updateClient = async (id: number, data: TUpdateClientRequest) => {
   try {
     const { data: response } = await api.put<TClientResponse>(
-      `/clients/${id}`,
+      `/customers/${id}`,
       data
     );
     return response;
@@ -77,7 +77,7 @@ export const updateClient = async (id: number, data: TUpdateClientRequest) => {
 
 export const deleteClient = async (id: number) => {
   try {
-    await api.delete<TClientResponse>(`/clients/${id}`);
+    await api.delete<TClientResponse>(`/customers/${id}`);
   } catch (error) {
     populateError(error, "خطأ فى حذف العميل");
   }
@@ -85,7 +85,7 @@ export const deleteClient = async (id: number) => {
 
 export const getClient = async (id: number) => {
   try {
-    const { data: response } = await api.get<TClientResponse>(`/clients/${id}`);
+    const { data: response } = await api.get<TClientResponse>(`/customers/${id}`);
     return response;
   } catch (error) {
     populateError(error, "خطأ فى جلب العميل");
@@ -94,7 +94,7 @@ export const getClient = async (id: number) => {
 
 export const exportClientsToCSV = async (params?: Record<string, unknown>) => {
   try {
-    const response = await api.get<Blob>(`/clients/export`, {
+    const response = await api.get<Blob>(`/customers/export`, {
       params,
       responseType: "blob",
     });

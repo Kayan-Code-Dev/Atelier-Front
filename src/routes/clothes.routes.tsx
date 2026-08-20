@@ -11,13 +11,11 @@ export const clothesRoutes = () => {
       element={
         <PermissionProtectedRoute
           permission={[
-            "clothes.view",
-            "clothes.export",
-            "transfers.view",
-            "transfers.create",
-            "transfers.update",
-            "transfers.approve",
-            "transfers.reject",
+            "dresses.view",
+            "dresses.export",
+            "inventory.view",
+            "inventory.manage",
+            "dresses.update",
           ]}
         />
       }

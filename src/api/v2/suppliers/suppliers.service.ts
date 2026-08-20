@@ -29,11 +29,12 @@ export const createSupplierMinimal = async (
   data: TCreateSupplierMinimalRequest,
 ) => {
   try {
-    const { data: response } = await api.post<TCreateSupplierStoreResponse>(
-      "/suppliers/store",
-      data,
-    );
-    return response?.supplier;
+    const { data: response } = await api.post<{
+      message?: string;
+      supplier?: TSupplierResponse;
+      data?: TSupplierResponse;
+    }>("/suppliers", data);
+    return response?.supplier ?? response?.data;
   } catch (error) {
     populateError(error, "خطأ فى إنشاء المورد");
   }
@@ -41,11 +42,12 @@ export const createSupplierMinimal = async (
 
 export const createSupplier = async (data: TCreateSupplierRequest) => {
   try {
-    const { data: response } = await api.post<TCreateSupplierStoreResponse>(
-      "/suppliers/store",
-      data,
-    );
-    return response?.supplier;
+    const { data: response } = await api.post<{
+      message?: string;
+      supplier?: TSupplierResponse;
+      data?: TSupplierResponse;
+    }>("/suppliers", data);
+    return response?.supplier ?? response?.data;
   } catch (error) {
     populateError(error, "خطأ فى إنشاء المورد");
   }
@@ -57,7 +59,7 @@ export const updateSupplier = async (
 ) => {
   try {
     const { data: response } = await api.put<TSupplierResponse>(
-      `/suppliers/update/${id}`,
+      `/suppliers/${id}`,
       data,
     );
     return response;
@@ -87,7 +89,7 @@ export const getSuppliers = async (
 export const deleteSupplier = async (id: number) => {
   try {
     const { data: response } = await api.delete<TSupplierResponse>(
-      `/suppliers/delete/${id}`,
+      `/suppliers/${id}`,
     );
     return response;
   } catch (error) {
@@ -129,7 +131,7 @@ export const exportSuppliersToExcel = async (params?: Record<string, unknown>) =
 export const getSupplierOrders = async (page: number, per_page: number) => {
   try {
     const { data: response } = await api.get<TSupplierOrdersListResponse>(
-      "/supplier-orders",
+      "/purchase-orders",
       { params: { page, per_page } },
     );
     return response;
@@ -143,7 +145,7 @@ export const exportSupplierOrdersToExcel = async (
   params?: Record<string, unknown>
 ) => {
   try {
-    const response = await api.get<Blob>("/supplier-orders/export", {
+    const response = await api.get<Blob>("/purchase-orders/export", {
       params,
       responseType: "blob",
     });
@@ -160,7 +162,7 @@ export const getSupplierOrdersBySupplierId = async (
 ) => {
   try {
     const { data: response } = await api.get<TSupplierOrdersListResponse>(
-      "/supplier-orders",
+      "/purchase-orders",
       { params: { supplier_id: supplierId, page, per_page } },
     );
     return response;
@@ -189,7 +191,7 @@ export const getSupplierOrder = async (
 ): Promise<TSupplierOrderDetailResponse | undefined> => {
   try {
     const { data: response } = await api.get<TSupplierOrdersListResponse>(
-      "/supplier-orders",
+      "/purchase-orders",
       { params: { supplier_id: supplierId, page: 1, per_page: 500 } },
     );
     return response?.data?.find((o) => o.id === orderId);
@@ -203,7 +205,7 @@ export const createSupplierOrder = async (
 ) => {
   try {
     const { data: response } = await api.post(
-      "/supplier-orders/store",
+      "/purchase-orders",
       data,
     );
     return response;
@@ -218,7 +220,7 @@ export const updateSupplierOrder = async (
 ) => {
   try {
     const { data: response } = await api.put(
-      `/supplier-orders/update/${id}`,
+      `/purchase-orders/${id}`,
       data,
     );
     return response;
@@ -233,7 +235,7 @@ export const addPaymentToSupplierOrder = async (
 ) => {
   try {
     const { data: response } = await api.post(
-      `/supplier-orders/add-payment/${id}`,
+      `/purchase-orders/${id}/payments`,
       body,
     );
     return response;
@@ -255,7 +257,7 @@ export const receiveSupplierOrder = async (id: number) => {
 export const returnSupplierOrder = async (id: number) => {
   try {
     const { data: response } = await api.post(
-      `/supplier-orders/return/${id}`,
+      `/purchase-orders/${id}/return`,
       {},
     );
     return response;

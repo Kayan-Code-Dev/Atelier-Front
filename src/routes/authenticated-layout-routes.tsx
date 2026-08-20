@@ -56,11 +56,11 @@ export function getAuthenticatedLayoutRouteElements() {
         element={
           <PermissionProtectedRoute
             permission={[
-              "clients.view",
-              "clients.create",
-              "clients.update",
-              "clients.delete",
-              "clients.export",
+              "customers.view",
+              "customers.create",
+              "customers.update",
+              "customers.delete",
+              "customers.export",
             ]}
           />
         }

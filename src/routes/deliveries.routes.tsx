@@ -7,7 +7,7 @@ export const deliveriesRoutes = () => {
     <Route
       path="/deliveries"
       element={
-        <PermissionProtectedRoute permission={["orders.deliver"]} />
+        <PermissionProtectedRoute permission={["invoice_delivery.deliver", "invoice_delivery.view"]} />
       }
     >
       <Route index element={<DeliveriesList />} />

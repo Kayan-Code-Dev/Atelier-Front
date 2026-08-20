@@ -13,7 +13,7 @@ import PermissionProtectedRoute from "./PermissionProtectedRoute";
 
 export const ordersRoutes = () => {
   return (
-    <Route path="orders" element={<PermissionProtectedRoute permission={["orders.view", "orders.create", "orders.update", "orders.export"]} />}>
+    <Route path="orders" element={<PermissionProtectedRoute permission={["invoices.view", "invoices.create", "invoices.update", "invoices.export"]} />}>
       <Route index element={<Navigate to="/orders/list" replace />} />
       <Route path="list" element={<OrdersList />} />
       <Route path="search-deliveries-returns" element={<DeliveriesReturnsSearch />} />

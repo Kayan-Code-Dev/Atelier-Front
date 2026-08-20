@@ -14,7 +14,7 @@ export const inventoryRoutes = () => {
       path="/inventory"
       element={
         <PermissionProtectedRoute
-          permission={["inventories.view", "transfers.view"]}
+          permission={["inventory.view", "inventory.manage", "dresses.view"]}
         />
       }
     >
