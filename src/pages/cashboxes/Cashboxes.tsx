@@ -399,19 +399,29 @@ function Cashboxes() {
                           {cashbox.name}
                         </TableCell>
                         <TableCell className="text-center">
-                          {cashbox.branch?.name ?? "-"}
+                          {cashbox.branch?.name ?? cashbox.branch_name ?? "-"}
                         </TableCell>
                         <TableCell className="text-center">
-                          {cashbox.initial_balance.toLocaleString()}
+                          {Number(cashbox.initial_balance ?? 0).toLocaleString()}
                         </TableCell>
                         <TableCell className="text-center">
-                          {cashbox.current_balance.toLocaleString()}
+                          {Number(cashbox.current_balance ?? 0).toLocaleString()}
                         </TableCell>
                         <TableCell className="text-center text-green-600">
-                          {cashbox.today_income.toLocaleString()}
+                          {Number(
+                            cashbox.today_income ??
+                              cashbox.today_summary?.income ??
+                              cashbox.total_in ??
+                              0,
+                          ).toLocaleString()}
                         </TableCell>
                         <TableCell className="text-center text-red-600">
-                          {cashbox.today_expense.toLocaleString()}
+                          {Number(
+                            cashbox.today_expense ??
+                              cashbox.today_summary?.expense ??
+                              cashbox.total_out ??
+                              0,
+                          ).toLocaleString()}
                         </TableCell>
                         <TableCell className="text-center">
                           <Badge

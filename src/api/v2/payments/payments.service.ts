@@ -34,8 +34,8 @@ export const getTailoringPayments = async (
 ) => {
   try {
     const { data } = await api.get<TPaginationResponse<TTailoringPaymentListItem>>(
-      "/tailoring-orders/payments",
-      { params }
+      "/payments",
+      { params: { ...params, source: "tailoring" } }
     );
     return data;
   } catch (error) {

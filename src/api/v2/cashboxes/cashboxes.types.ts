@@ -2,20 +2,23 @@ export type TCashbox = {
   id: number;
   name: string;
   branch_id: number;
-  initial_balance: number;
-  current_balance: number;
+  initial_balance?: number | null;
+  current_balance?: number | null;
   description: string;
   is_active: boolean;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
-  branch: {
+  branch_name?: string | null;
+  branch?: {
     id: number;
-    branch_code: string;
+    branch_code?: string;
     name: string;
-  };
-  today_income: number;
-  today_expense: number;
+  } | null;
+  today_income?: number | null;
+  today_expense?: number | null;
+  total_in?: number | null;
+  total_out?: number | null;
   today_summary?: {
     expense: number;
     income: number;

@@ -16,7 +16,7 @@ export const createOrder = async (
   data: TCreateOrderRequest | TCreateOrderWithNewClientRequest
 ): Promise<TOrder | undefined> => {
   try {
-    const { data: responseData } = await api.post<TOrder>(`/orders`, data);
+    const { data: responseData } = await api.post<TOrder>(`/invoices`, data);
     return responseData;
   } catch (error: any) {
     populateError(error, "خطأ فى إضافة الطلب");
@@ -122,7 +122,7 @@ export const getOrders = async (
   try {
     const params = buildOrderListParams(filters, { page, per_page });
     const { data: responseData } = await api.get<TPaginationResponse<TOrder>>(
-      `/orders`,
+      `/invoices`,
       { params },
     );
     return responseData;
@@ -133,7 +133,7 @@ export const getOrders = async (
 
 export const getOrderDetails = async (id: number) => {
   try {
-    const { data: responseData } = await api.get<TOrder>(`/orders/${id}`);
+    const { data: responseData } = await api.get<TOrder>(`/invoices/${id}`);
     return responseData;
   } catch (error: any) {
     populateError(error, "خطأ فى جلب الطلب");
@@ -142,7 +142,7 @@ export const getOrderDetails = async (id: number) => {
 
 export const deleteOrder = async (id: number) => {
   try {
-    await api.delete(`/orders/${id}`);
+    await api.delete(`/invoices/${id}`);
   } catch (error: any) {
     populateError(error, "خطأ فى حذف الطلب");
   }
@@ -159,7 +159,15 @@ export type TOrderStatus =
 
 export const updateOrderStatus = async (id: number, status: TOrderStatus) => {
   try {
-    await api.post(`/orders/${id}/${status}`);
+    if (status === "cancel") {
+      await api.post(`/invoices/${id}/cancel`);
+      return;
+    }
+    if (status === "deliver" || status === "delivered") {
+      await api.post(`/invoices/${id}/deliver`, {});
+      return;
+    }
+    await api.put(`/invoices/${id}`, { status });
   } catch (error: any) {
     populateError(error, "خطأ فى تحديث حالة الطلب");
   }
@@ -168,10 +176,17 @@ export const updateOrderStatus = async (id: number, status: TOrderStatus) => {
 /** Update order status via PATCH (more flexible) */
 export const updateOrderStatusV2 = async (id: number, status: string) => {
   try {
-    const { data: responseData } = await api.patch<TOrder>(
-      `/orders/${id}/status`,
-      { status },
-    );
+    if (status === "cancel") {
+      const { data: responseData } = await api.post<TOrder>(`/invoices/${id}/cancel`);
+      return responseData;
+    }
+    if (status === "deliver" || status === "delivered") {
+      const { data: responseData } = await api.post<TOrder>(`/invoices/${id}/deliver`, {});
+      return responseData;
+    }
+    const { data: responseData } = await api.put<TOrder>(`/invoices/${id}`, {
+      status,
+    });
     return responseData;
   } catch (error: any) {
     populateError(error, "خطأ فى تحديث حالة الطلب");
@@ -182,7 +197,7 @@ export const updateOrderStatusV2 = async (id: number, status: string) => {
 export const addOrderPayment = async (id: number, data: TAddPaymentRequest) => {
   try {
     const { data: responseData } = await api.post<TOrder>(
-      `/orders/${id}/payments`,
+      `/invoices/${id}/payments`,
       data,
     );
     return responseData;
@@ -194,7 +209,7 @@ export const addOrderPayment = async (id: number, data: TAddPaymentRequest) => {
 /** Update order (full payload) */
 export const updateOrder = async (id: number, data: TUpdateOrderRequest) => {
   try {
-    const { data: responseData } = await api.put<TOrder>(`/orders/${id}`, data);
+    const { data: responseData } = await api.put<TOrder>(`/invoices/${id}`, data);
     return responseData;
   } catch (error: any) {
     populateError(error, "خطأ فى تحديث الطلب");
@@ -253,7 +268,7 @@ export const returnOrderItem = async (
 export const exportOrdersToCSV = async (filters?: TOrderListFilters) => {
   try {
     const params = buildOrderListParams(filters);
-    const response = await api.get<Blob>(`/orders/export`, {
+    const response = await api.get<Blob>(`/invoices/export`, {
       params,
       responseType: "blob",
     });
@@ -286,8 +301,9 @@ export const exportDeliveriesToCSV = async (filters?: {
 /** Mark order as delivered */
 export const markAsDelivered = async (id: number) => {
   try {
-    const { data: responseData } = await api.patch<TOrder>(
-      `/orders/${id}/deliver`,
+    const { data: responseData } = await api.post<TOrder>(
+      `/invoices/${id}/deliver`,
+      {},
     );
     return responseData;
   } catch (error: any) {
@@ -298,8 +314,8 @@ export const markAsDelivered = async (id: number) => {
 /** Mark order as cancelled */
 export const markAsCancelled = async (id: number) => {
   try {
-    const { data: responseData } = await api.patch<TOrder>(
-      `/orders/${id}/cancel`,
+    const { data: responseData } = await api.post<TOrder>(
+      `/invoices/${id}/cancel`,
     );
     return responseData;
   } catch (error: any) {

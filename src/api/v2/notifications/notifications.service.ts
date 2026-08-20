@@ -19,10 +19,18 @@ export const getNotifications = async (params: TGetNotificationsParams) => {
 
 export const getUnreadCount = async () => {
   try {
-    const { data } = await api.get<TUnreadCountResponse>(
-      "/notifications/unread-count"
+    const { data } = await api.get<{ unread?: number; unread_count?: number } | TUnreadCountResponse>(
+      "/notifications/stats"
     );
-    return data;
+    const unread =
+      typeof data === "object" && data
+        ? Number(
+            ("unread_count" in data && data.unread_count) ||
+              ("unread" in data && data.unread) ||
+              0,
+          ) || 0
+        : 0;
+    return { unread_count: unread } satisfies TUnreadCountResponse;
   } catch (error) {
     populateError(error, "خطأ في جلب عدد الإشعارات غير المقروءة");
   }
@@ -30,7 +38,7 @@ export const getUnreadCount = async () => {
 
 export const markNotificationAsRead = async (id: number) => {
   try {
-    await api.post(`/notifications/${id}/read`);
+    await api.patch(`/notifications/${id}/read`);
   } catch (error) {
     populateError(error, "خطأ في تحديد الإشعار كمقروء");
   }
@@ -38,7 +46,7 @@ export const markNotificationAsRead = async (id: number) => {
 
 export const markAllNotificationsAsRead = async () => {
   try {
-    await api.post("/notifications/mark-all-read");
+    await api.post("/notifications/read-all");
   } catch (error) {
     populateError(error, "خطأ في تحديد جميع الإشعارات كمقروءة");
   }

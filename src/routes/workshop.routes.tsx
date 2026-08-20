@@ -17,6 +17,7 @@ export const workshopRoutes = () => {
             "workshops.delete",
             "workshops.manage-clothes",
             "workshops.approve-transfers",
+            "settings.manage",
           ]}
         />
       }

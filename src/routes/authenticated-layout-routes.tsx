@@ -82,6 +82,7 @@ export function getAuthenticatedLayoutRouteElements() {
               "factories.update",
               "factories.delete",
               "factories.manage",
+              "settings.manage",
             ]}
           />
         }

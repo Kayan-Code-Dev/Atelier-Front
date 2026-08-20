@@ -20,35 +20,18 @@ function unwrapResource(
   return raw as TTailoringOrderResource;
 }
 
+/** Atelier stages are client-defined; stats has no workflow-statuses route. */
 export async function getTailoringWorkflowStatuses(): Promise<
   TTailoringWorkflowStatusesResponse | undefined
 > {
-  try {
-    const { data } = await api.get<
-      TTailoringWorkflowStatusesResponse | { data: TTailoringWorkflowStatusesResponse }
-    >("/tailoring-orders/workflow-statuses");
-    if (
-      data &&
-      typeof data === "object" &&
-      "statuses" in data &&
-      Array.isArray((data as TTailoringWorkflowStatusesResponse).statuses)
-    ) {
-      return data as TTailoringWorkflowStatusesResponse;
-    }
-    if (data && typeof data === "object" && "data" in data) {
-      return (data as { data: TTailoringWorkflowStatusesResponse }).data;
-    }
-    return undefined;
-  } catch (error) {
-    populateError(error, "خطأ في جلب مراحل التفصيل");
-  }
+  return undefined;
 }
 
 export async function getTailoringOrdersList(
   params?: TGetTailoringOrdersApiParams,
 ): Promise<TTailoringOrdersListResponse | undefined> {
   try {
-    const { data } = await api.get<TTailoringOrdersListResponse>("/tailoring-orders", {
+    const { data } = await api.get<TTailoringOrdersListResponse>("/tailoring/orders", {
       params,
     });
     return data;
@@ -63,7 +46,7 @@ export async function getTailoringOrderById(
   try {
     const { data } = await api.get<
       TTailoringOrderResource | { data: TTailoringOrderResource }
-    >(`/tailoring-orders/${id}`);
+    >(`/tailoring/orders/${id}`);
     return unwrapResource(data as TTailoringOrderResource | { data: TTailoringOrderResource });
   } catch (error) {
     populateError(error, "خطأ في جلب أمر التفصيل");
@@ -76,7 +59,7 @@ export async function createTailoringOrder(
   try {
     const { data } = await api.post<
       TTailoringOrderResource | { data: TTailoringOrderResource }
-    >("/tailoring-orders", body);
+    >("/tailoring/orders", body);
     return unwrapResource(data as TTailoringOrderResource | { data: TTailoringOrderResource });
   } catch (error) {
     populateError(error, "خطأ في إنشاء أمر التفصيل");
@@ -88,9 +71,9 @@ export async function patchTailoringOrderMeasurements(
   body: TPatchTailoringOrderMeasurementsPayload,
 ): Promise<TTailoringOrderResource | undefined> {
   try {
-    const { data } = await api.patch<
+    const { data } = await api.put<
       TTailoringOrderResource | { data: TTailoringOrderResource }
-    >(`/tailoring-orders/${id}/measurements`, body);
+    >(`/tailoring/orders/${id}/measurements`, body);
     return unwrapResource(data as TTailoringOrderResource | { data: TTailoringOrderResource });
   } catch (error) {
     populateError(error, "خطأ في تحديث المقاسات");
@@ -102,9 +85,9 @@ export async function patchTailoringOrderStatus(
   body: TPatchTailoringOrderStatusPayload,
 ): Promise<TTailoringOrderResource | undefined> {
   try {
-    const { data } = await api.patch<
+    const { data } = await api.post<
       TTailoringOrderResource | { data: TTailoringOrderResource }
-    >(`/tailoring-orders/${id}/status`, body);
+    >(`/tailoring/orders/${id}/change-stage`, body);
     return unwrapResource(data as TTailoringOrderResource | { data: TTailoringOrderResource });
   } catch (error) {
     populateError(error, "خطأ في تحديث المرحلة");
@@ -118,7 +101,7 @@ export async function addTailoringOrderPayment(
   try {
     const { data } = await api.post<
       TTailoringOrderResource | { data: TTailoringOrderResource }
-    >(`/tailoring-orders/${id}/payments`, body);
+    >(`/invoices/${id}/payments`, body);
     return unwrapResource(data as TTailoringOrderResource | { data: TTailoringOrderResource });
   } catch (error) {
     populateError(error, "خطأ في تسجيل الدفعة");

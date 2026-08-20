@@ -407,7 +407,7 @@ export const sidebarLabels: SidebarLabel[] = [
     path: "/workshop",
     level: 1,
     riIcon: "ri-tools-line",
-    permissions: ["workshops.view", "workshops.create", "workshops.update", "workshops.delete", "workshops.export", "workshops.manage-clothes", "workshops.approve-transfers", "workshops.update-status", "workshops.return-cloth", "workshops.view-logs"],
+    permissions: ["workshops.view", "workshops.create", "workshops.update", "workshops.delete", "workshops.export", "workshops.manage-clothes", "workshops.approve-transfers", "workshops.update-status", "workshops.return-cloth", "workshops.view-logs", "settings.manage"],
     iconComponent: createIcon(Wrench),
   },
   {
@@ -416,7 +416,7 @@ export const sidebarLabels: SidebarLabel[] = [
     path: "/factory",
     level: 1,
     riIcon: "ri-ancient-gate-line",
-    permissions: ["factories.view", "factories.create", "factories.update", "factories.delete", "factories.export", "factories.manage", "factories.orders.view", "factories.orders.accept", "factories.orders.reject", "factories.orders.update-status", "factories.orders.add-notes", "factories.orders.set-delivery-date", "factories.orders.deliver", "factories.reports.view", "factories.dashboard.view"],
+    permissions: ["factories.view", "factories.create", "factories.update", "factories.delete", "factories.export", "factories.manage", "factories.orders.view", "factories.orders.accept", "factories.orders.reject", "factories.orders.update-status", "factories.orders.add-notes", "factories.orders.set-delivery-date", "factories.orders.deliver", "factories.reports.view", "factories.dashboard.view", "settings.manage"],
     iconComponent: createIcon(Factory),
   },
   // 10. Permissions and Roles

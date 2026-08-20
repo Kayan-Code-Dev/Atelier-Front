@@ -168,39 +168,53 @@ function CashboxDetails() {
 
                 <div className="space-y-2">
                   <Label className="text-muted-foreground">الفرع</Label>
-                  <p className="font-medium">{cashbox.branch.name}</p>
+                  <p className="font-medium">
+                    {cashbox.branch?.name ?? cashbox.branch_name ?? "-"}
+                  </p>
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-muted-foreground">كود الفرع</Label>
-                  <p className="font-medium">{cashbox.branch.branch_code}</p>
+                  <p className="font-medium">
+                    {cashbox.branch?.branch_code ?? "-"}
+                  </p>
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-muted-foreground">الرصيد الأولي</Label>
                   <p className="font-medium text-lg">
-                    {cashbox.initial_balance.toLocaleString()} ج.م
+                    {Number(cashbox.initial_balance ?? 0).toLocaleString()} ج.م
                   </p>
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-muted-foreground">الرصيد الحالي</Label>
                   <p className="font-medium text-lg text-primary">
-                    {cashbox.current_balance.toLocaleString()} ج.م
+                    {Number(cashbox.current_balance ?? 0).toLocaleString()} ج.م
                   </p>
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-muted-foreground">إيرادات اليوم</Label>
                   <p className="font-medium text-lg text-green-600">
-                    {cashbox.today_summary?.income.toLocaleString()} ج.م
+                    {Number(
+                      cashbox.today_summary?.income ??
+                        cashbox.today_income ??
+                        cashbox.total_in ??
+                        0,
+                    ).toLocaleString()} ج.م
                   </p>
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-muted-foreground">مصروفات اليوم</Label>
                   <p className="font-medium text-lg text-red-600">
-                    {cashbox.today_summary?.expense.toLocaleString()} ج.م
+                    {Number(
+                      cashbox.today_summary?.expense ??
+                        cashbox.today_expense ??
+                        cashbox.total_out ??
+                        0,
+                    ).toLocaleString()} ج.م
                   </p>
                 </div>
 

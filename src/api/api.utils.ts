@@ -31,6 +31,69 @@ export function downloadBlob(blob: Blob, filename?: string): void {
   window.URL.revokeObjectURL(url);
 }
 
+type AtelierMeta = Record<string, unknown>;
+
+type AtelierEnvelope = {
+  success?: boolean;
+  message?: string;
+  data?: unknown;
+  meta?: AtelierMeta | unknown;
+};
+
+/**
+ * Normalize Atelier `{ success, data, meta }` envelopes into the shapes the
+ * DressnMore-era FE services expect (paginated `{ data, current_page, ... }`
+ * or a bare resource object).
+ */
+export function normalizeAtelierEnvelope(payload: unknown): unknown {
+  if (!payload || typeof payload !== "object") return payload;
+  const envelope = payload as AtelierEnvelope;
+  if (envelope.success !== true || !("data" in envelope)) return payload;
+
+  const inner = envelope.data;
+  const meta =
+    envelope.meta && typeof envelope.meta === "object" && !Array.isArray(envelope.meta)
+      ? (envelope.meta as AtelierMeta)
+      : {};
+
+  if (Array.isArray(inner)) {
+    const current_page = Number(meta.current_page ?? 1) || 1;
+    const per_page = Number(meta.per_page ?? inner.length) || inner.length || 10;
+    const total = Number(meta.total ?? inner.length) || inner.length;
+    const total_pages =
+      Number(meta.last_page ?? meta.total_pages ?? 1) || 1;
+    const stats =
+      meta.stats && typeof meta.stats === "object"
+        ? (meta.stats as AtelierMeta)
+        : undefined;
+
+    return {
+      data: inner,
+      current_page,
+      per_page,
+      total,
+      total_pages,
+      message: envelope.message,
+      success: true,
+      meta: stats
+        ? {
+            total: Number(stats.total ?? total) || total,
+            read: Number(stats.read ?? 0) || 0,
+            unread: Number(stats.unread ?? 0) || 0,
+          }
+        : Object.keys(meta).length
+          ? meta
+          : {
+              total,
+              read: 0,
+              unread: 0,
+            },
+    };
+  }
+
+  return inner;
+}
+
 export const resolveError = (error: any) => {
   if (error.response) {
     let msg =

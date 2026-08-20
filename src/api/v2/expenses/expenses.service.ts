@@ -13,7 +13,7 @@ import { TPaginationResponse } from "@/api/api-common.types";
 
 export const getExpenseCategories = async () => {
   try {
-    const { data } = await api.get<TExpenseCategoriesApiResponse>("/expenses/categories");
+    const { data } = await api.get<TExpenseCategoriesApiResponse>("/expense-categories");
     return data;
   } catch (error) {
     populateError(error, "خطأ فى جلب تصنيفات المصروفات");

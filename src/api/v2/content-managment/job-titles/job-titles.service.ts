@@ -13,7 +13,7 @@ import { TRole } from "../roles/roles.types";
 export const getJobTitles = async (params: TGetJobTitlesParams) => {
   try {
     const { data } = await api.get<TPaginationResponse<TJobTitle>>(
-      "/job-titles",
+      "/hr/job-titles",
       {
         params,
       }
@@ -26,7 +26,7 @@ export const getJobTitles = async (params: TGetJobTitlesParams) => {
 
 export const createJobTitle = async (data: TCreateJobTitleRequest) => {
   try {
-    const { data: response } = await api.post<TJobTitle>("/job-titles", data);
+    const { data: response } = await api.post<TJobTitle>("/hr/job-titles", data);
     return response;
   } catch (error) {
     populateError(error, "خطأ فى إنشاء المسمية الوظيفية");
@@ -39,7 +39,7 @@ export const updateJobTitle = async (
 ) => {
   try {
     const { data: response } = await api.put<TJobTitle>(
-      `/job-titles/${id}`,
+      `/hr/job-titles/${id}`,
       data
     );
     return response;
@@ -50,7 +50,7 @@ export const updateJobTitle = async (
 
 export const deleteJobTitle = async (id: number) => {
   try {
-    await api.delete(`/job-titles/${id}`);
+    await api.delete(`/hr/job-titles/${id}`);
   } catch (error) {
     populateError(error, "خطأ فى حذف المسمية الوظيفية");
   }
@@ -58,7 +58,7 @@ export const deleteJobTitle = async (id: number) => {
 
 export const getJobTitle = async (id: number) => {
   try {
-    const { data: response } = await api.get<TJobTitle>(`/job-titles/${id}`);
+    const { data: response } = await api.get<TJobTitle>(`/hr/job-titles/${id}`);
     return response;
   } catch (error) {
     populateError(error, "خطأ فى جلب المسمية الوظيفية");
@@ -68,18 +68,18 @@ export const getJobTitle = async (id: number) => {
 export const getJobTitleLevels = async () => {
   try {
     const { data: response } = await api.get<{ levels: TJobTitleLevel[] }>(
-      "/job-titles/levels"
+      "/hr/job-titles/levels"
     );
     return response.levels;
-  } catch (error) {
-    populateError(error, "خطأ فى جلب قائمة المستويات الوظيفية");
+  } catch {
+    return [] as TJobTitleLevel[];
   }
 };
 
 export const getJobTitleRoles = async (id: number) => {
   try {
     const { data: response } = await api.get<{ roles: TRole[] }>(
-      `/job-titles/${id}/roles`
+      `/hr/job-titles/${id}/roles`
     );
     return response.roles;
   } catch (error) {
@@ -89,7 +89,7 @@ export const getJobTitleRoles = async (id: number) => {
 
 export const syncJobTitleRoles = async (id: number, role_ids: number[]) => {
   try {
-    await api.put(`/job-titles/${id}/roles/sync`, { role_ids });
+    await api.put(`/hr/job-titles/${id}/roles/sync`, { role_ids });
   } catch (error) {
     populateError(error, "خطأ فى تحديث قائمة الصلاحيات الوظيفية");
   }

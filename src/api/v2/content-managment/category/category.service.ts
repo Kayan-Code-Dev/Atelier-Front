@@ -11,7 +11,7 @@ import { TPaginationResponse } from "@/api/api-common.types";
 export const createCategoryApi = async (req: TCreateCategoryRequest) => {
   try {
     const { data } = await api.post<TCreateCategoryResponse>(
-      "/categories",
+      "/dress-categories",
       req
     );
     return data;
@@ -23,7 +23,7 @@ export const createCategoryApi = async (req: TCreateCategoryRequest) => {
 export const getCategoriesApi = async (page: number, per_page: number) => {
   try {
     const { data } = await api.get<TPaginationResponse<TCategory>>(
-      "/categories",
+      "/dress-categories",
       { params: { page, per_page } }
     );
     return data;
@@ -34,7 +34,7 @@ export const getCategoriesApi = async (page: number, per_page: number) => {
 
 export const getCategoryByIdApi = async (id: number) => {
   try {
-    const { data } = await api.get<TCategory>(`/categories/${id}`);
+    const { data } = await api.get<TCategory>(`/dress-categories/${id}`);
     return data;
   } catch (error: any) {
     populateError(error, "خطأ فى جلب قسم المنتجات");
@@ -47,7 +47,7 @@ export const updateCategoryApi = async (
 ) => {
   try {
     const { data } = await api.put<TCategory>(
-      `/categories/${id}`,
+      `/dress-categories/${id}`,
       req
     );
     return data;
@@ -58,7 +58,7 @@ export const updateCategoryApi = async (
 
 export const deleteCategoryApi = async (id: number) => {
   try {
-    await api.delete(`/categories/${id}`);
+    await api.delete(`/dress-categories/${id}`);
     return true;
   } catch (error: any) {
     populateError(error, "خطأ فى حذف قسم المنتجات");
@@ -67,7 +67,7 @@ export const deleteCategoryApi = async (id: number) => {
 
 export const exportCategoriesToCSV = async (params?: Record<string, unknown>) => {
   try {
-    const response = await api.get<Blob>(`/categories/export`, {
+    const response = await api.get<Blob>(`/dress-categories/export`, {
       params,
       responseType: "blob",
     });

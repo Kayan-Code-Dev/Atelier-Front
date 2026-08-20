@@ -9,7 +9,7 @@ export const getTransactionsPaymentsExpenses = async (
 ) => {
   try {
     const { data } = await api.get<TPaginationResponse<TTransaction>>(
-      "/transactions/payments-expenses",
+      "/cash-movements",
       { params }
     );
     return data;
@@ -21,7 +21,7 @@ export const getTransactionsPaymentsExpenses = async (
 
 export const exportTransactionsToCSV = async (params?: TTransactionsParams) => {
   try {
-    const response = await api.get<Blob>("/transactions/payments-expenses/export", {
+    const response = await api.get<Blob>("/cashboxes/statement/export", {
       params,
       responseType: "blob",
     });

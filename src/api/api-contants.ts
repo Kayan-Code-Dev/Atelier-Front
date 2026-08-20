@@ -1,6 +1,6 @@
 import { useAuthStore } from "@/zustand-stores/auth.store";
 import { api } from "./api-instance";
-import { resolveError } from "./api.utils";
+import { normalizeAtelierEnvelope, resolveError } from "./api.utils";
 
 export { api, applyTenantApiBaseUrl, resetTenantApiBaseUrl } from "./api-instance";
 
@@ -24,6 +24,9 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => {
+    if (response.config.responseType !== "blob") {
+      response.data = normalizeAtelierEnvelope(response.data);
+    }
     if (import.meta.env.MODE === "development") {
       console.log(
         " api response ",
