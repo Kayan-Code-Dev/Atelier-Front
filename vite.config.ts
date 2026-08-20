@@ -37,6 +37,16 @@ export default defineConfig({
         manualChunks(id) {
           if (!id.includes("node_modules")) {
             const normalized = id.replace(/\\/g, "/");
+            // Keep API client shared — do not sink it into a random page-* chunk.
+            if (normalized.includes("/src/api/")) {
+              return "app-api";
+            }
+            if (
+              normalized.includes("/src/lib/") ||
+              normalized.includes("/src/zustand-stores/")
+            ) {
+              return "app-core";
+            }
             const ordersNested = normalized.match(
               /\/src\/pages\/orders\/([^/]+)\//,
             );

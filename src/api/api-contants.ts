@@ -24,8 +24,23 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => {
-    if (response.config.responseType !== "blob") {
+    const url = String(response.config.url ?? "");
+    const isAuthLogin =
+      /\/login(?:\?|$)/.test(url) ||
+      /\/login\/google(?:\?|$)/.test(url);
+    if (response.config.responseType !== "blob" && !isAuthLogin) {
       response.data = normalizeAtelierEnvelope(response.data);
+    } else if (isAuthLogin) {
+      // Always expose the inner login payload (token/user/tenant/endpoints).
+      const payload = response.data;
+      if (
+        payload &&
+        typeof payload === "object" &&
+        (payload as { success?: boolean }).success === true &&
+        "data" in (payload as object)
+      ) {
+        response.data = (payload as { data: unknown }).data;
+      }
     }
     if (import.meta.env.MODE === "development") {
       console.log(
