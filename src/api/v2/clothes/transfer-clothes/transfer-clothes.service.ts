@@ -90,6 +90,6 @@ export const rejectPartialTransferClothes = async (
 
 export const exportTransferClothesToCSV = async (
   _params?: Record<string, unknown>,
-) => {
+): Promise<{ data: Blob; headers: unknown } | undefined> => {
   throw new Error("تصدير سجل النقل غير متاح حالياً");
 };
