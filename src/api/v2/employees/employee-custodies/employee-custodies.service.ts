@@ -102,15 +102,21 @@ export const markEmployeeCustodyAsDamaged = async (
   }
 };
 
+const ATELIER_CUSTODY_TYPES: TEmployeeCustodyType[] = [
+  { key: "laptop", name: "لابتوب" },
+  { key: "phone", name: "هاتف" },
+  { key: "tablet", name: "تابلت" },
+  { key: "vehicle", name: "مركبة" },
+  { key: "key", name: "مفتاح" },
+  { key: "card", name: "بطاقة" },
+  { key: "tool", name: "أداة" },
+  { key: "uniform", name: "زي رسمي" },
+  { key: "cash", name: "عهدة نقدية" },
+  { key: "document", name: "مستندات" },
+];
+
 export const getEmployeeCustodyTypes = async () => {
-  try {
-    const { data: responseData } = await api.get<{
-      types: TEmployeeCustodyType[];
-    }>("/employees/custodies/types");
-    return responseData.types;
-  } catch {
-    // Atelier tenants may not expose custody type catalog yet.
-    return [] as TEmployeeCustodyType[];
-  }
+  // Atelier tenant API has no /employees/custodies/types catalog.
+  return ATELIER_CUSTODY_TYPES;
 };
 

@@ -233,7 +233,7 @@ export default function ProductTransferPage() {
         >
           <i className="ri-checkbox-circle-fill text-xl text-green-600" />
           <p className="text-sm font-semibold text-green-800">
-            تم تسجيل طلب النقل بنجاح وسيتم تحديث موقع المنتج بعد الموافقة.
+            تم نقل المنتج إلى الفرع فوراً.
           </p>
         </div>
       )}
@@ -248,7 +248,7 @@ export default function ProductTransferPage() {
         <div>
           <h2 className="text-lg font-bold text-slate-800">نقل المنتجات</h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            نقل المنتجات بين الفروع والورشة والمصنع
+            نقل المنتجات فوراً بين الفروع
           </p>
         </div>
         <button
@@ -261,7 +261,7 @@ export default function ProductTransferPage() {
           }}
         >
           <i className="ri-arrow-left-right-line" />
-          طلب نقل جديد
+          نقل منتج
         </button>
       </div>
 

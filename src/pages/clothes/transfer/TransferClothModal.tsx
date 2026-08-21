@@ -4,8 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type { TEntity } from "@/lib/types/entity.types";
-import { EntitySelect } from "@/components/custom/EntitySelect";
+import { BranchesSelect } from "@/components/custom/BranchesSelect";
 import { DatePicker } from "@/components/custom/DatePicker";
 import { useCreateTransferClothesMutationOptions } from "@/api/v2/clothes/transfer-clothes/transfer-clothes.hooks";
 import { CLOTHES_KEY } from "@/api/v2/clothes/clothes.hooks";
@@ -34,9 +33,6 @@ type Props = {
 const inputClass =
   "w-full rounded-xl border border-slate-200 bg-white py-2.5 px-3 text-sm outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-300";
 
-const entitySelectShell =
-  "[&_label]:block [&_label]:text-xs [&_label]:font-bold [&_label]:text-slate-600 [&_label]:mb-1.5 [&_[data-slot=select-trigger]]:rounded-xl [&_[data-slot=select-trigger]]:border-slate-200 [&_[data-slot=select-trigger]]:h-auto [&_[data-slot=select-trigger]]:min-h-[42px] [&_[data-slot=select-trigger]]:py-2.5";
-
 export function TransferClothModal({
   open,
   onOpenChange,
@@ -45,8 +41,7 @@ export function TransferClothModal({
 }: Props) {
   const [pickedCloth, setPickedCloth] = useState<TClothResponse | null>(null);
 
-  const [toEntityType, setToEntityType] = useState<TEntity | undefined>();
-  const [toEntityId, setToEntityId] = useState("");
+  const [toBranchId, setToBranchId] = useState("");
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -64,8 +59,7 @@ export function TransferClothModal({
   useEffect(() => {
     if (!open) return;
     setPickedCloth(initialCloth ?? null);
-    setToEntityType(undefined);
-    setToEntityId("");
+    setToBranchId("");
     form.reset({
       transfer_date: new Date(),
       notes: "",
@@ -84,13 +78,13 @@ export function TransferClothModal({
       toast.error("اختر منتجاً أولاً");
       return;
     }
-    if (!toEntityType || !toEntityId) {
-      toast.error("اختر نوع الوجهة والوجهة");
+    if (!toBranchId) {
+      toast.error("اختر الفرع الوجهة");
       return;
     }
     if (
-      pickedCloth.entity_type === toEntityType &&
-      pickedCloth.entity_id === Number(toEntityId)
+      pickedCloth.entity_type === "branch" &&
+      pickedCloth.entity_id === Number(toBranchId)
     ) {
       toast.error("الوجهة يجب أن تختلف عن موقع المنتج الحالي");
       return;
@@ -102,15 +96,15 @@ export function TransferClothModal({
       {
         from_entity_type: pickedCloth.entity_type,
         from_entity_id: pickedCloth.entity_id,
-        to_entity_type: toEntityType,
-        to_entity_id: Number(toEntityId),
+        to_entity_type: "branch",
+        to_entity_id: Number(toBranchId),
         cloth_ids: [pickedCloth.id],
         transfer_date,
         notes: values.notes.trim(),
       },
       {
         onSuccess: () => {
-          toast.success("تم تسجيل طلب النقل بنجاح");
+          toast.success("تم نقل المنتج إلى الفرع");
           queryClient.invalidateQueries({ queryKey: [CLOTHES_KEY] });
           onSuccess?.();
           close();
@@ -264,19 +258,15 @@ export function TransferClothModal({
                       placeholder="—"
                     />
                   </div>
-                  <div className={cn("space-y-0", entitySelectShell)}>
-                    <EntitySelect
-                      mode="standalone"
-                      entityType={toEntityType}
-                      entityId={toEntityId}
-                      onEntityTypeChange={(t) => {
-                        setToEntityType(t);
-                        setToEntityId("");
-                      }}
-                      onEntityIdChange={setToEntityId}
-                      entityTypeLabel="نوع الوجهة"
-                      entityIdLabel="الوجهة"
-                      required
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-1.5">
+                      إلى الفرع <span className="text-red-400">*</span>
+                    </label>
+                    <BranchesSelect
+                      value={toBranchId}
+                      onChange={setToBranchId}
+                      disabled={isSubmitting}
+                      placeholder="اختر الفرع الوجهة..."
                     />
                   </div>
                 </div>

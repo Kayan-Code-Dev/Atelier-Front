@@ -8,108 +8,88 @@ import {
   TUpdateTransferClothesRequest,
 } from "./transfer-clothes.types";
 
+const emptyTransfersPage = (
+  query: TGetTransferClothesQuery = {},
+): TPaginationResponse<TTransferClothesItem> => ({
+  data: [],
+  current_page: query.page ?? 1,
+  per_page: query.per_page ?? 15,
+  total: 0,
+  total_pages: 1,
+});
+
+/**
+ * Atelier transfers a dress immediately to another branch:
+ * POST /dresses/{id}/transfer { to_branch_id, notes }
+ * There is no pending request/approve collection at /transfers.
+ */
 export const createTransferClothes = async (
-  data: CreateTransferClothesRequest
+  data: CreateTransferClothesRequest,
 ) => {
+  if (data.to_entity_type !== "branch") {
+    throw new Error("نقل المنتجات متاح بين الفروع فقط");
+  }
+  if (!data.cloth_ids?.length) {
+    throw new Error("اختر منتجاً للنقل");
+  }
   try {
-    await api.post(`/transfers`, data);
+    for (const clothId of data.cloth_ids) {
+      await api.post(`/dresses/${clothId}/transfer`, {
+        to_branch_id: data.to_entity_id,
+        notes: data.notes ?? null,
+      });
+    }
   } catch (error) {
-    populateError(error, "خطأ فى ارسال الطلب ");
+    populateError(error, "خطأ فى نقل المنتج");
   }
 };
 
 export const getTransferClothes = async (query: TGetTransferClothesQuery) => {
-  try {
-    const { data } = await api.get<TPaginationResponse<TTransferClothesItem>>(
-      `/transfers`,
-      {
-        params: {
-          page: query.page,
-          per_page: query.per_page,
-          status: query.status,
-        },
-      }
-    );
-    return data;
-  } catch (error) {
-    populateError(error, "خطأ فى جلب الطلبات ");
-  }
+  // No collection endpoint in Atelier tenant API. Keep the page empty instead of 404.
+  return emptyTransfersPage(query);
 };
 
 export const updateTransferClothes = async (
-  id: number,
-  data: TUpdateTransferClothesRequest
+  _id: number,
+  _data: TUpdateTransferClothesRequest,
 ) => {
-  try {
-    await api.put(`/transfers/${id}`, data);
-  } catch (error) {
-    populateError(error, "خطأ فى تحديث الطلب ");
-  }
+  throw new Error("النقل يتم فوراً ولا يحتاج تعديلاً لاحقاً");
 };
 
-export const deleteTransferClothes = async (id: number) => {
-  try {
-    await api.delete(`/transfers/${id}`);
-  } catch (error) {
-    populateError(error, "خطأ فى حذف الطلب ");
-  }
+export const deleteTransferClothes = async (_id: number) => {
+  throw new Error("النقل يتم فوراً ولا يمكن حذفه كطلب معلّق");
 };
 
-export const approveTransferClothes = async (id: number) => {
-  try {
-    await api.post(`/transfers/${id}/approve`);
-  } catch (error) {
-    populateError(error, "خطأ فى قبول الطلب ");
-  }
+export const approveTransferClothes = async (_id: number) => {
+  throw new Error("النقل يتم فوراً ولا يحتاج موافقة");
 };
 
-export const rejectTransferClothes = async (id: number) => {
-  try {
-    await api.post(`/transfers/${id}/reject`);
-  } catch (error) {
-    populateError(error, "خطأ فى رفض الطلب ");
-  }
+export const rejectTransferClothes = async (_id: number) => {
+  throw new Error("النقل يتم فوراً ولا يحتاج رفضاً");
 };
 
-export const getTransferClotheById = async (id: number) => {
-  try {
-    const { data } = await api.get<TTransferClothesItem>(`/transfers/${id}`);
-    return data;
-  } catch (error) {
-    populateError(error, "خطأ فى جلب الطلب ");
-  }
+export const getTransferClotheById = async (
+  _id: number,
+): Promise<TTransferClothesItem | undefined> => {
+  return undefined;
 };
 
 export const approvePartialTransferClothes = async (
-  id: number,
-  item_ids: number[]
+  _id: number,
+  _item_ids: number[],
 ) => {
-  try {
-    await api.post(`/transfers/${id}/approve-items`, { item_ids });
-  } catch (error) {
-    populateError(error, "خطأ فى قبول الطلب ");
-  }
+  throw new Error("النقل يتم فوراً ولا يحتاج موافقة جزئية");
 };
 
 export const rejectPartialTransferClothes = async (
-  id: number,
-  item_ids: number[]
+  _id: number,
+  _item_ids: number[],
 ) => {
-  try {
-    await api.post(`/transfers/${id}/reject-items`, { item_ids });
-  } catch (error) {
-    populateError(error, "خطأ فى رفض الطلب ");
-  }
+  throw new Error("النقل يتم فوراً ولا يحتاج رفضاً جزئياً");
 };
 
-export const exportTransferClothesToCSV = async (params?: Record<string, unknown>) => {
-  try {
-    const response = await api.get<Blob>(`/transfers/export`, {
-      params,
-      responseType: "blob",
-    });
-    return { data: response.data, headers: response.headers };
-  } catch (error) {
-    populateError(error, "خطأ فى تصدير طلبات التحويل ");
-  }
+export const exportTransferClothesToCSV = async (
+  _params?: Record<string, unknown>,
+) => {
+  throw new Error("تصدير سجل النقل غير متاح حالياً");
 };
